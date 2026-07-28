@@ -1,4 +1,12 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ARCLOG
+
+Self-hosted Bible reading app — migrated from Gadget (Faithfull) to **Next.js + Supabase**.
+
+## Docs
+
+- [PROJECT_BRIEF.md](./PROJECT_BRIEF.md) — goals, stack, scope
+- [BACKEND_TEST_ROADMAP.md](./BACKEND_TEST_ROADMAP.md) — step-by-step backend verification
+- [supabase/README.md](./supabase/README.md) — SQL migrations (run in Supabase SQL Editor)
 
 ## Getting Started
 
