@@ -21,9 +21,9 @@ Bible tables + RPCs + public read policies are **already applied and seeded** (~
 | 11 | `migrations/00011_achievements.sql` | Achievements + `evaluate_achievements` |
 | 12 | `migrations/00012_social.sql` | Friends, leagues, challenges |
 | 13 | `migrations/00013_gamification_rls.sql` | RLS + `submit_step_answer` |
-| 14 | `migrations/00014_seed_starter_path.sql` | Gospel of John starter + guest mini-lesson |
+| 15 | `migrations/00015_ensure_profile_on_attempts.sql` | Ensure profile before lesson attempts |
 
-Copy each file into the SQL Editor and run **in order** (`00004` → `00014`). Skip `00004`–`00006` if already applied.
+Copy each file into the SQL Editor and run **in order** (`00004` → `00015`). Skip already-applied files.
 
 ## Book codes (important)
 

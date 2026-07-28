@@ -4,9 +4,6 @@ import { BrandHeader } from "@/components/ui/brand-header";
 import { Icon } from "@/components/ui/icon";
 import { createClient } from "@/lib/supabase/server";
 
-const HERO_IMG =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBroSOoPXgr4dVDxlz1uSUeV35nW0pengsZJMApByUVH5EZQMeqFndfjSFmX9oYdjLbks6qisIJCrHRfWqYhsW1R5QvYzB1MLIIuC2yvBdXUK-nW93JpVpmYNsMTTypvrxymMFeiQohsOcTFzQrTgWDX_4M1HYkmQ8rj8Q6vyocwMtSXsVmvMPQ0cVlXKowd2aExl0yLhDQKqGpwcu7JfxQKny865IWi7jWnYolxCntvuVQSn8yfS4S";
-
 const AVATARS = [
   "https://lh3.googleusercontent.com/aida-public/AB6AXuBig5ll7BWNSZTPjWsrOpcIQRpUtIkn395oKq-2ykmA507t9Ija3rL8FuRtgn8_nB88EkvDq1HB9jk18w32le3DLjr6FB-D1SUoUbjoV3HSnopMcK45Bkj5sDMicFZOzEBSK8V9s6R24Yw9watM5w3OVbdre9Qmgx318mzn_CerLo-8xPiha5Xz8ab1Jsra0py-Ye5jj4f1ds4EzaFDsm_nNvJKcFlUfgnDiZv25uQjeYruKFADCSbL",
   "https://lh3.googleusercontent.com/aida-public/AB6AXuDu0qFh1yurKym-R-fZQ4CuqYh4KEL-FJmABKZHzpRFgujNdOHLB3sprgMtwicLxMlUrRrJ7X4mzJ3Fi5Ew8bXa9IJvRkFo2XLDPgdc65I8jbMdiX_WKN0G9tD5bSu5QTMp7xxHhBTg-VnDLHlBlo4IactqnD4Fv1QW2pKERU5ZX4a5Au9JFcp_Sl8iaQmIMqro9ApQ25UMMBjO6Qmf9CqMRKr8Nt2Vz51JQevpR3qj-5cLcthzin8G",
@@ -22,20 +19,6 @@ export default async function WelcomePage() {
     <div className="relative flex min-h-screen flex-col items-center overflow-x-hidden bg-surface text-on-surface">
       <BrandHeader showLanguage />
       <main className="flex w-full max-w-[1200px] flex-grow flex-col items-center justify-center px-margin-mobile pb-12 pt-24">
-        <div className="relative mb-8 flex aspect-square w-full max-w-md items-center justify-center">
-          <div className="absolute inset-0 animate-pulse rounded-full bg-primary-container opacity-20 blur-[80px]" />
-          <div className="relative z-10 h-full w-full p-8">
-            <div className="animate-float flex h-full w-full items-center justify-center overflow-hidden rounded-full border-2 border-outline-variant bg-white shadow-lg">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={HERO_IMG}
-                alt="A learner reading a glowing book under a sunrise"
-                className="h-full w-full object-cover"
-              />
-            </div>
-          </div>
-        </div>
-
         <div className="mb-16 max-w-2xl space-y-6 text-center">
           <h1 className="text-3xl font-bold tracking-tight text-on-background md:text-5xl md:leading-[1.15]">
             Learn the Bible,{" "}
@@ -43,9 +26,8 @@ export default async function WelcomePage() {
             <span className="italic text-primary">One Verse</span> at a Time.
           </h1>
           <p className="px-4 text-base font-medium text-on-surface-variant">
-            Join <span className="font-bold text-on-surface">100,000+ disciples</span>{" "}
-            on an engaging, gamified journey through the scriptures. Build a
-            lasting spiritual habit with daily rewards and community streaks.
+            Join us on an engaging, gamified journey through the scriptures. Build
+            a lasting spiritual habit with daily rewards and community streaks.
           </p>
         </div>
 

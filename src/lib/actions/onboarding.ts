@@ -14,6 +14,7 @@ import {
   formatForTranslationSlug,
   TRANSLATION_FORMAT_BY_SLUG,
 } from "@/lib/bible/book-codes";
+import { toUserFacingError } from "@/lib/errors";
 
 export type ActionResult = {
   error?: string;
@@ -104,7 +105,7 @@ export async function completeOnboarding(
       onboarding_completed_at: new Date().toISOString(),
     })
     .eq("id", auth.userId);
-  if (error) return { error: error.message };
+  if (error) return { error: toUserFacingError(error.message) };
 
   const { data: units } = await supabase
     .from("learning_units")
@@ -170,7 +171,7 @@ export async function claimGuestProgress(): Promise<ActionResult> {
   const { error } = await supabase.rpc("claim_guest_progress", {
     p_guest_id: guestId,
   });
-  if (error) return { error: error.message };
+  if (error) return { error: toUserFacingError(error.message) };
 
   jar.delete("arclog_guest_id");
   revalidatePath("/me");
