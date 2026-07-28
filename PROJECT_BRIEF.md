@@ -19,18 +19,18 @@ The product goal is unchanged: help users read Scripture daily, save bookmarks a
 
 | Layer | Technology |
 |---|---|
-| Frontend (later) | Next.js 16, TypeScript, Tailwind CSS, shadcn/ui |
+| Frontend (later) | Next.js 15 (App Router + Edge Middleware), TypeScript, Tailwind CSS, shadcn/ui |
 | Backend | Supabase Postgres, Auth, RLS |
-| SSR / server | Next.js server components, `@supabase/ssr` |
-| Bible content | `bible_translation` + `bible_verse` tables (ported from Faithfull) |
+| SSR / server | Next.js server components, `@supabase/ssr`, `middleware.ts` (OpenNext/Cloudflare) |
+| Bible content | `bible_translation` + `bible_verse` (existing Faithfull DB; `book_code` varies by format — OSIS uses `JOHN`/`MATT`, zefania/usfx use `JHN`/`MAT`) |
 | Static content | JSON files (calendar, difficult-times topics) — to be added |
 
 ## Supabase project
 
-- **Org:** `snfvmlijhaftrtzcjpet`
-- **Project ref:** `etcmqhaahuhruwklolxj`
-- **URL:** `https://etcmqhaahuhruwklolxj.supabase.co`
-- **Migrations:** `supabase/migrations/` (run manually in SQL Editor)
+- **Project ref:** `gcbousxyszxgvmjoktuz` (existing Faithfull Bible DB)
+- **URL:** `https://gcbousxyszxgvmjoktuz.supabase.co`
+- **Bible content:** already seeded (`bible_translation` / `bible_verse` + RPCs)
+- **Migrations:** run `00004`–`00006` only for profiles / personalization (see `supabase/README.md`)
 
 ## Scope
 
@@ -74,8 +74,8 @@ Faithfull Gadget model mapping:
 
 ## Development phases
 
-1. **Database** — run SQL migrations, seed Bible data *(current)*
-2. **Backend layer** — Supabase clients, server actions, reference parsing
+1. **Database** — reuse Faithfull Bible project; personalization migrations applied
+2. **Backend layer** — Supabase clients, middleware session, reference parsing, server actions *(current)*
 3. **Backend verification** — manual + SQL test checklist ([BACKEND_TEST_ROADMAP.md](./BACKEND_TEST_ROADMAP.md))
 4. **Frontend** — new UI/UX direction on top of proven backend
 
@@ -96,8 +96,8 @@ ARCLOG/
 
 ## Success criteria (backend)
 
-- [ ] All 6 migrations applied without errors
-- [ ] Bible verses readable anonymously (anon key)
+- [ ] Personalization migrations `00004`–`00006` applied without errors
+- [ ] Bible verses readable anonymously (anon key) against existing data
 - [ ] User can sign up → profile row auto-created
 - [ ] Authenticated user can CRUD own bookmarks, notes, progress
 - [ ] User cannot read or modify another user's data (RLS enforced)

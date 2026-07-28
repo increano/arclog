@@ -2,19 +2,20 @@
 
 Step-by-step plan to verify the Supabase backend before building the new frontend.
 
-Run migrations first — see [supabase/README.md](./supabase/README.md).
+Bible data already lives on Faithfull project `gcbousxyszxgvmjoktuz`. Run personalization migrations only — see [supabase/README.md](./supabase/README.md).
 
 ---
 
 ## Phase 0 — Prerequisites
 
-- [ ] Supabase project `etcmqhaahuhruwklolxj` is accessible
-- [ ] Migrations `00001` → `00006` applied in SQL Editor
+- [ ] Supabase project `gcbousxyszxgvmjoktuz` is accessible
+- [ ] Bible tables/RPCs already present (skip `00001`–`00003`)
+- [ ] Migrations `00004` → `00006` applied in SQL Editor
 - [ ] Auth providers enabled: **Email** (required), **Google** (optional for now)
-- [ ] `.env.local` created:
+- [ ] `.env.local` created (copy from `.env.example`):
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://etcmqhaahuhruwklolxj.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://gcbousxyszxgvmjoktuz.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<your anon key>
 SUPABASE_SERVICE_ROLE_KEY=<your service role key>
 ```
@@ -60,35 +61,73 @@ where routine_schema = 'public'
 
 ### 2.1 Seed minimal test data
 
-Skip if you already imported Faithfull Bible data. Otherwise run once:
+**Skip** — Faithfull project already has ~242k verses (including `eng-kjv`). Only seed if the Bible tables were wiped.
 
-```sql
-insert into public.bible_translation (slug, format, title, language_code, source_filename)
-values ('eng-kjv', 'osis', 'King James Version', 'en', 'test-seed.sql')
-on conflict (slug) do nothing;
+### 2.2 Book codes are format-dependent (verified)
 
-insert into public.bible_verse (translation_id, book_code, chapter, verse, text)
-select t.id, 'JHN', 3, 16, 'For God so loved the world...'
-from public.bible_translation t
-where t.slug = 'eng-kjv'
-on conflict do nothing;
-```
+`book_code` values are **not** shared across all translations. Use the code family that matches `bible_translation.format` (or look up via `list_bible_books`).
 
-### 2.2 Test anonymous reads
+| Slug | Format | Books | John gospel code | John 3:16 |
+|---|---|---:|---|---|
+| `eng-asv` | zefania | 66 | `JHN` | OK |
+| `eng-darby` | zefania | 66 | `JHN` | OK |
+| `eng-dra` | zefania | 75 | `JHN` | OK |
+| `eng-gb-webbe` | usfx | 81 | `JHN` | OK |
+| `eng-web` | usfx | 84 | `JHN` | OK |
+| `eng-ylt` | zefania | 27 (NT) | `JHN` | OK |
+| `eng-kjv` | osis | 81 | `JOHN` | OK |
+| `eng-gb-oeb` | osis | 42 (NT) | `JOHN` | OK |
+| `eng-us-oeb` | osis | 42 (NT) | `JOHN` | OK |
+
+Other common splits (same idea):
+
+| Concept | OSIS (`eng-kjv`, OEB) | Zefania / USFX |
+|---|---|---|
+| Matthew | `MATT` | `MAT` |
+| Mark | `MARK` | `MRK` |
+| Luke | `LUKE` | `LUK` |
+| Psalms | `PS` | `PSA` |
+| 1 Samuel | `1SAM` | `1SA` |
+| 1 Kings | `1KGS` | `1KI` |
+| 1 John | `1JOHN` | `1JN` |
+
+Default profile slug is `eng-kjv` → use **`JOHN`**, not `JHN`. Faithfull’s `bible-books.ts` maps names → OSIS-short (`JHN`); that works for zefania/usfx but **misses** eng-kjv unless aliased.
+
+### 2.3 Test anonymous reads
 
 In SQL Editor (runs as postgres — simulates service role). For real anon test, use Dashboard → **API** → REST or the checks below once the Next.js client exists.
 
 ```sql
 -- Translation lookup
-select id, slug from public.bible_translation where slug = 'eng-kjv';
+select id, slug, format from public.bible_translation where slug = 'eng-kjv';
 
--- Verse fetch (calendar / difficult-times pattern)
+-- Verse fetch for default translation (OSIS codes)
 select verse, text
 from public.bible_verse
 where translation_id = (select id from public.bible_translation where slug = 'eng-kjv')
+  and book_code = 'JOHN'
+  and chapter = 3
+  and verse = 16;
+
+-- Same verse for a zefania translation (short codes)
+select verse, text
+from public.bible_verse
+where translation_id = (select id from public.bible_translation where slug = 'eng-asv')
   and book_code = 'JHN'
   and chapter = 3
-order by verse;
+  and verse = 16;
+
+-- Per-translation consistency: John 3:16 must resolve for every slug
+-- (pick JOHN or JHN from list_bible_books for that translation_id)
+select t.slug, t.format, v.book_code, v.text
+from public.bible_translation t
+join public.bible_verse v
+  on v.translation_id = t.id
+ and v.chapter = 3
+ and v.verse = 16
+ and v.book_code in ('JOHN', 'JHN')
+order by t.slug;
+-- Expected: 9 rows (one per translation)
 
 -- RPC: books in translation
 select * from public.list_bible_books(
@@ -99,16 +138,20 @@ select * from public.list_bible_books(
 select * from public.translation_verse_counts();
 ```
 
-### 2.3 Test anon key from terminal (optional)
+### 2.4 Test anon key from terminal (optional)
 
 ```bash
-curl "https://etcmqhaahuhruwklolxj.supabase.co/rest/v1/bible_translation?slug=eq.eng-kjv&select=id,slug" \
+curl "https://gcbousxyszxgvmjoktuz.supabase.co/rest/v1/bible_translation?slug=eq.eng-kjv&select=id,slug,format" \
+  -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" \
+  -H "Authorization: Bearer $NEXT_PUBLIC_SUPABASE_ANON_KEY"
+
+# eng-kjv (OSIS)
+curl "https://gcbousxyszxgvmjoktuz.supabase.co/rest/v1/bible_verse?select=book_code,verse,text&book_code=eq.JOHN&chapter=eq.3&verse=eq.16&translation_id=eq.<eng-kjv-uuid>" \
   -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" \
   -H "Authorization: Bearer $NEXT_PUBLIC_SUPABASE_ANON_KEY"
 ```
 
-**Pass:** JSON response with translation row (not `permission denied`).
-
+**Pass:** JSON response with translation/verse rows (not `permission denied`); John 3:16 present for all 9 slugs with the matching book code.
 ---
 
 ## Phase 3 — Auth + profile
@@ -147,13 +190,13 @@ Real RLS test (REST with user JWT):
 
 ```bash
 # 1. Sign in to get access_token (replace email/password)
-curl -X POST "https://etcmqhaahuhruwklolxj.supabase.co/auth/v1/token?grant_type=password" \
+curl -X POST "https://gcbousxyszxgvmjoktuz.supabase.co/auth/v1/token?grant_type=password" \
   -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" \
   -H "Content-Type: application/json" \
   -d '{"email":"test@arclog.local","password":"<password>"}'
 
 # 2. Patch profile with returned access_token
-curl -X PATCH "https://etcmqhaahuhruwklolxj.supabase.co/rest/v1/profiles?id=eq.<user-uuid>" \
+curl -X PATCH "https://gcbousxyszxgvmjoktuz.supabase.co/rest/v1/profiles?id=eq.<user-uuid>" \
   -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" \
   -H "Authorization: Bearer <access_token>" \
   -H "Content-Type: application/json" \
@@ -172,15 +215,15 @@ Use the test user's JWT from Phase 3. Replace `<TOKEN>` and `<USER_ID>`.
 
 ```bash
 # Create
-curl -X POST "https://etcmqhaahuhruwklolxj.supabase.co/rest/v1/bookmarks" \
+curl -X POST "https://gcbousxyszxgvmjoktuz.supabase.co/rest/v1/bookmarks" \
   -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" \
   -H "Authorization: Bearer <TOKEN>" \
   -H "Content-Type: application/json" \
   -H "Prefer: return=representation" \
-  -d '{"user_id":"<USER_ID>","label":"John 3:16","reference":"John 3:16","book_code":"JHN","chapter":3,"verse":16}'
+  -d '{"user_id":"<USER_ID>","label":"John 3:16","reference":"John 3:16","book_code":"JOHN","chapter":3,"verse":16}'
 
 # List own
-curl "https://etcmqhaahuhruwklolxj.supabase.co/rest/v1/bookmarks?select=*" \
+curl "https://gcbousxyszxgvmjoktuz.supabase.co/rest/v1/bookmarks?select=*" \
   -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" \
   -H "Authorization: Bearer <TOKEN>"
 ```
@@ -188,7 +231,7 @@ curl "https://etcmqhaahuhruwklolxj.supabase.co/rest/v1/bookmarks?select=*" \
 ### 4.2 Note
 
 ```bash
-curl -X POST "https://etcmqhaahuhruwklolxj.supabase.co/rest/v1/notes" \
+curl -X POST "https://gcbousxyszxgvmjoktuz.supabase.co/rest/v1/notes" \
   -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" \
   -H "Authorization: Bearer <TOKEN>" \
   -H "Content-Type: application/json" \
@@ -199,12 +242,12 @@ curl -X POST "https://etcmqhaahuhruwklolxj.supabase.co/rest/v1/notes" \
 ### 4.3 Reading progress (mark as read)
 
 ```bash
-curl -X POST "https://etcmqhaahuhruwklolxj.supabase.co/rest/v1/reading_progress" \
+curl -X POST "https://gcbousxyszxgvmjoktuz.supabase.co/rest/v1/reading_progress" \
   -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" \
   -H "Authorization: Bearer <TOKEN>" \
   -H "Content-Type: application/json" \
   -H "Prefer: return=representation" \
-  -d '{"user_id":"<USER_ID>","last_read_at":"2026-07-28T12:00:00Z","reference":"John 3:16","book_code":"JHN","chapter":3,"verse":16,"translation_slug":"eng-kjv"}'
+  -d '{"user_id":"<USER_ID>","last_read_at":"2026-07-28T12:00:00Z","reference":"John 3:16","book_code":"JOHN","chapter":3,"verse":16,"translation_slug":"eng-kjv"}'
 ```
 
 ### 4.4 Latest progress view
@@ -224,12 +267,12 @@ Create a **second** test user (`test2@arclog.local`). Sign in as user 2 and atte
 
 ```bash
 # Should return empty array (not user 1's bookmarks)
-curl "https://etcmqhaahuhruwklolxj.supabase.co/rest/v1/bookmarks?select=*" \
+curl "https://gcbousxyszxgvmjoktuz.supabase.co/rest/v1/bookmarks?select=*" \
   -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" \
   -H "Authorization: Bearer <USER2_TOKEN>"
 
 # Should fail or no-op: insert with another user's user_id
-curl -X POST "https://etcmqhaahuhruwklolxj.supabase.co/rest/v1/bookmarks" \
+curl -X POST "https://gcbousxyszxgvmjoktuz.supabase.co/rest/v1/bookmarks" \
   -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" \
   -H "Authorization: Bearer <USER2_TOKEN>" \
   -H "Content-Type: application/json" \
@@ -285,7 +328,7 @@ Compare against Faithfull behavior:
 | `permission denied for table bible_*` | Migration `00003` not run, or RLS policy missing |
 | Profile missing after signup | Migration `00004` trigger not applied |
 | `insert violates row-level security` | `user_id` doesn't match `auth.uid()` |
-| Empty verse results | Bible data not seeded |
+| Empty verse results | Wrong `translation_id`, or OSIS vs short `book_code` (`JOHN` vs `JHN`, `MATT` vs `MAT`, …) |
 | RPC returns nothing | No rows in `bible_verse` for that translation |
 | Auth curl fails | Email provider disabled or user not confirmed |
 
@@ -296,7 +339,7 @@ Compare against Faithfull behavior:
 Backend is **ready for frontend** when:
 
 1. Phases 1–5 pass
-2. At least one full translation seeded (or Faithfull import complete)
+2. Existing Faithfull Bible data readable (anon SELECT + RPCs)
 3. Phase 6 passes once server layer is built
 4. Phase 7 checklist is all checked
 

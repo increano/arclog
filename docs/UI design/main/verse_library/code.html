@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BibleQuest - Verse Library</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#eff4ff",
+                    "secondary": "#006c49",
+                    "outline-variant": "#c2c6d6",
+                    "secondary-container": "#6cf8bb",
+                    "on-error": "#ffffff",
+                    "on-background": "#0b1c30",
+                    "on-surface": "#0b1c30",
+                    "on-secondary-fixed": "#002113",
+                    "surface-container-highest": "#d3e4fe",
+                    "outline": "#727785",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-secondary-container": "#00714d",
+                    "on-tertiary-fixed": "#261a00",
+                    "on-tertiary": "#ffffff",
+                    "surface-dim": "#cbdbf5",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#956e00",
+                    "error": "#ba1a1a",
+                    "primary-container": "#2170e4",
+                    "on-surface-variant": "#424754",
+                    "tertiary-fixed": "#ffdf9f",
+                    "secondary-fixed": "#6ffbbe",
+                    "tertiary": "#765700",
+                    "on-tertiary-container": "#fffbff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#5c4300",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#fefcff",
+                    "surface": "#f8f9ff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "surface-tint": "#005ac2",
+                    "tertiary-fixed-dim": "#f9bd22",
+                    "inverse-surface": "#213145",
+                    "inverse-primary": "#adc6ff",
+                    "on-primary-fixed-variant": "#004395",
+                    "surface-variant": "#d3e4fe",
+                    "surface-bright": "#f8f9ff",
+                    "on-primary-fixed": "#001a42",
+                    "on-secondary": "#ffffff",
+                    "surface-container-high": "#dce9ff",
+                    "surface-container": "#e5eeff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "primary-fixed": "#d8e2ff",
+                    "primary": "#0058be",
+                    "primary-fixed-dim": "#adc6ff",
+                    "background": "#f8f9ff",
+                    "on-primary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "margin-mobile": "20px",
+                    "base": "8px",
+                    "md": "24px",
+                    "margin-desktop": "auto",
+                    "xl": "64px",
+                    "xs": "4px",
+                    "lg": "40px",
+                    "max-width": "1200px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Quicksand"],
+                    "label-bold": ["Quicksand"],
+                    "scripture-quote": ["Playfair Display"],
+                    "body-regular": ["Quicksand"],
+                    "scripture-body": ["Playfair Display"],
+                    "caption": ["Quicksand"],
+                    "display-lg": ["Quicksand"],
+                    "headline-md": ["Quicksand"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "700"}],
+                    "scripture-quote": ["22px", {"lineHeight": "34px", "fontWeight": "600"}],
+                    "body-regular": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "scripture-body": ["18px", {"lineHeight": "30px", "fontWeight": "400"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .squishy-button:active {
+            transform: translateY(2px);
+            box-shadow: none !important;
+        }
+        .tactile-card {
+            border-bottom: 3px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        .tactile-card:hover {
+            transform: scale(1.01);
+            border-bottom-width: 5px;
+        }
+        .active-nav-border {
+            border-bottom: 4px solid #0058be;
+        }
+        /* Hide scrollbar but keep functionality */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col font-body-regular text-body-regular">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 md:px-lg bg-surface dark:bg-surface-dim border-b-2 border-outline-variant dark:border-outline">
+<div class="flex items-center gap-base">
+<span class="font-display-lg-mobile text-display-lg-mobile font-bold text-primary dark:text-primary-fixed">BibleQuest</span>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-2 hover:bg-surface-container-low transition-colors rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">local_fire_department</span>
+</button>
+<button class="p-2 hover:bg-surface-container-low transition-colors rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">grade</span>
+</button>
+<button class="p-2 hover:bg-surface-container-low transition-colors rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">language</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar (Desktop Only) -->
+<nav class="hidden md:flex flex-col fixed left-0 top-16 h-[calc(100vh-64px)] w-64 p-md gap-base bg-surface dark:bg-surface-dim border-r-2 border-outline-variant dark:border-outline z-40">
+<div class="mb-lg px-4">
+<h2 class="font-display-lg text-display-lg font-bold text-primary">Faith Journey</h2>
+<p class="text-on-surface-variant font-label-bold text-label-bold">Level 12 Disciple</p>
+</div>
+<div class="space-y-2">
+<a class="flex items-center gap-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl px-4 py-3 hover:scale-105 transition-transform" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-bold text-label-bold">Home</span>
+</a>
+<a class="flex items-center gap-sm bg-primary-container text-on-primary-container rounded-xl px-4 py-3 border-b-4 border-primary hover:scale-105 transition-transform" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-bold text-label-bold">Library</span>
+</a>
+<a class="flex items-center gap-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl px-4 py-3 hover:scale-105 transition-transform" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-bold text-label-bold">Leaderboard</span>
+</a>
+<a class="flex items-center gap-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl px-4 py-3 hover:scale-105 transition-transform" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-bold text-label-bold">Profile</span>
+</a>
+</div>
+<div class="mt-auto">
+<button class="w-full bg-tertiary-container text-on-tertiary-container py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 squishy-button">
+<span class="material-symbols-outlined">star</span>
+                Upgrade to Premium
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="mt-16 mb-20 md:ml-64 md:mb-0 flex flex-col md:flex-row min-h-[calc(100vh-64px)]">
+<!-- Left Column: Search & Selector -->
+<aside class="w-full md:w-80 border-r-2 border-outline-variant bg-surface-container-lowest p-margin-mobile md:p-md flex flex-col gap-md sticky md:top-16 md:h-[calc(100vh-64px)]">
+<div class="flex flex-col gap-sm">
+<h1 class="font-headline-md text-headline-md text-on-surface">Verse Library</h1>
+<div class="relative group">
+<input class="w-full pl-10 pr-4 py-3 rounded-full border-2 border-outline-variant focus:border-primary focus:ring-0 font-body-regular transition-all bg-surface" placeholder="Search books or verses..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto no-scrollbar flex flex-col gap-sm">
+<div class="flex flex-col gap-xs">
+<span class="font-label-bold text-label-bold text-primary uppercase tracking-wider px-2">Old Testament</span>
+<button class="flex items-center justify-between p-3 rounded-xl hover:bg-surface-container-high transition-colors text-left group">
+<span class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary">auto_stories</span>
+                            Genesis
+                        </span>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<button class="flex items-center justify-between p-3 rounded-xl bg-surface-container-highest border-l-4 border-primary text-left group">
+<span class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+                            Psalms
+                        </span>
+<span class="material-symbols-outlined text-primary">expand_more</span>
+</button>
+<!-- Expanded Chapter List for Psalms -->
+<div class="grid grid-cols-4 gap-xs p-2 bg-surface-container-low rounded-xl">
+<button class="aspect-square flex items-center justify-center rounded-lg hover:bg-primary-container hover:text-on-primary-container transition-colors font-bold">21</button>
+<button class="aspect-square flex items-center justify-center rounded-lg hover:bg-primary-container hover:text-on-primary-container transition-colors font-bold">22</button>
+<button class="aspect-square flex items-center justify-center rounded-lg bg-primary text-on-primary font-bold shadow-md">23</button>
+<button class="aspect-square flex items-center justify-center rounded-lg hover:bg-primary-container hover:text-on-primary-container transition-colors font-bold">24</button>
+</div>
+<button class="flex items-center justify-between p-3 rounded-xl hover:bg-surface-container-high transition-colors text-left group">
+<span class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary">auto_stories</span>
+                            Proverbs
+                        </span>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Right Column: Comparison View -->
+<section class="flex-1 bg-surface-container p-margin-mobile md:p-lg flex flex-col gap-lg">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div class="flex flex-col gap-xs">
+<div class="flex items-center gap-sm">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-full text-caption font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                            MASTERED
+                        </span>
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-caption font-bold">
+                            POETRY
+                        </span>
+</div>
+<h2 class="font-display-lg text-display-lg text-on-background">Psalm 23:1</h2>
+<p class="text-on-surface-variant">The Shepherd Psalm</p>
+</div>
+<div class="flex gap-sm">
+<button class="bg-surface text-primary border-2 border-primary px-6 py-2 rounded-full font-bold squishy-button flex items-center gap-2">
+<span class="material-symbols-outlined">bookmark</span>
+                        Save
+                    </button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold squishy-button flex items-center gap-2 shadow-lg">
+<span class="material-symbols-outlined">quiz</span>
+                        Flashcards
+                    </button>
+</div>
+</div>
+<!-- Comparison Bento Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-md items-stretch">
+<!-- KJV Version -->
+<div class="bg-surface-container-lowest p-md md:p-xl rounded-3xl tactile-card flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<span class="font-label-bold text-label-bold text-secondary tracking-widest bg-secondary-container/30 px-3 py-1 rounded-lg">KJV</span>
+<button class="text-outline hover:text-primary"><span class="material-symbols-outlined">volume_up</span></button>
+</div>
+<div class="bg-surface-container-low p-md rounded-2xl italic border-l-4 border-tertiary">
+<p class="font-scripture-quote text-scripture-quote text-on-surface leading-relaxed">
+                            "The Lord is my shepherd; I shall not want."
+                        </p>
+</div>
+<div class="flex flex-col gap-sm mt-4">
+<p class="text-caption text-on-surface-variant font-bold uppercase tracking-tighter">Word Analysis</p>
+<div class="flex flex-wrap gap-xs">
+<span class="bg-surface border border-outline-variant px-3 py-1 rounded-full text-[12px] hover:border-primary cursor-help">Want: lack</span>
+<span class="bg-surface border border-outline-variant px-3 py-1 rounded-full text-[12px] hover:border-primary cursor-help">Lord: Jehovah</span>
+</div>
+</div>
+</div>
+<!-- ESV Version -->
+<div class="bg-surface-container-lowest p-md md:p-xl rounded-3xl tactile-card flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<span class="font-label-bold text-label-bold text-primary tracking-widest bg-primary-container/10 px-3 py-1 rounded-lg">ESV</span>
+<button class="text-outline hover:text-primary"><span class="material-symbols-outlined">volume_up</span></button>
+</div>
+<div class="bg-primary-container/5 p-md rounded-2xl border-l-4 border-primary">
+<p class="font-scripture-quote text-scripture-quote text-on-surface leading-relaxed">
+                            "The Lord is my shepherd; I shall not want."
+                        </p>
+</div>
+<div class="flex flex-col gap-sm mt-4">
+<p class="text-caption text-on-surface-variant font-bold uppercase tracking-tighter">Linguistic Note</p>
+<p class="font-body-regular text-body-regular text-on-surface-variant">
+                            Modern translations maintain the traditional phrasing here for poetic consistency across the Psalms.
+                        </p>
+</div>
+</div>
+<!-- Cross References Card -->
+<div class="lg:col-span-2 bg-white/50 backdrop-blur-md p-md rounded-3xl border-2 border-dashed border-outline-variant">
+<div class="flex items-center gap-sm mb-4">
+<span class="material-symbols-outlined text-primary">link</span>
+<h3 class="font-label-bold text-label-bold text-on-surface">Cross References</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-sm">
+<div class="p-3 bg-surface rounded-xl hover:bg-surface-container-high transition-colors cursor-pointer border border-transparent hover:border-primary-container group">
+<p class="font-bold text-primary">John 10:11</p>
+<p class="text-[13px] text-on-surface-variant line-clamp-2">"I am the good shepherd..."</p>
+</div>
+<div class="p-3 bg-surface rounded-xl hover:bg-surface-container-high transition-colors cursor-pointer border border-transparent hover:border-primary-container group">
+<p class="font-bold text-primary">Isaiah 40:11</p>
+<p class="text-[13px] text-on-surface-variant line-clamp-2">"He will tend his flock like a shepherd..."</p>
+</div>
+<div class="p-3 bg-surface rounded-xl hover:bg-surface-container-high transition-colors cursor-pointer border border-transparent hover:border-primary-container group">
+<p class="font-bold text-primary">1 Peter 2:25</p>
+<p class="text-[13px] text-on-surface-variant line-clamp-2">"...the Shepherd and Overseer of your souls."</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Visualization / Atmosphere -->
+<div class="relative h-48 md:h-64 rounded-3xl overflow-hidden shadow-xl mt-4">
+<div class="absolute inset-0 z-0" data-alt="A tranquil, high-key digital painting of a sun-drenched green pasture with a gentle stream and a single wooden shepherd's staff resting against a rock. The lighting is soft and ethereal, using the BibleQuest palette of soft blues, greens, and warm whites. The scene is minimalist and peaceful, evoking a sense of divine protection and abundance." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBeHmTZMaP6bWy1Gkvm6VeXqWu_2g_Ja7qnLkn4ovn1qbIY4krhXjkqkLcgzVC_ZM20IM-EXzGswa3LTxZiGso4bYbrzTqKwb2LR778VJUA5oe-U-RkyOloN6OrRvELBfsc4wTJymrDU7JUbVItBMHxq2LS4kgj8WpojlZemQM4REXBQwba62RjWCfMGFibbOz-G10iCDv_Kc_3sB_zopeWDDqOa7NqTcTITUP1s8spALNKy0QPSrDz')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-on-background/60 to-transparent flex items-end p-md">
+<div class="text-white">
+<p class="text-caption font-bold opacity-80">Daily Insight</p>
+<p class="font-headline-md text-headline-md">"The Shepherd's care is active, not passive. He leads, restores, and protects."</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center bg-surface dark:bg-surface-dim px-4 pb-4 pt-2 border-t-2 border-outline-variant">
+<a class="flex flex-col items-center justify-center text-outline p-2" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-6 py-2" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="text-[10px] font-bold">Library</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline p-2" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-[10px] font-bold">Leaderboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline p-2" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-bold">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('.squishy-button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'scale(0.95)';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'scale(1)';
+            });
+        });
+
+        // Search highlight logic placeholder
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('input', (e) => {
+            // Future: filter list of books
+            console.log('Searching for:', e.target.value);
+        });
+    </script>
+</body></html>

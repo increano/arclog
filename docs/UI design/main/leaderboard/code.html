@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BibleQuest - Leaderboard &amp; Community</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#eff4ff",
+                        "secondary": "#006c49",
+                        "outline-variant": "#c2c6d6",
+                        "secondary-container": "#6cf8bb",
+                        "on-error": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "on-surface": "#0b1c30",
+                        "on-secondary-fixed": "#002113",
+                        "surface-container-highest": "#d3e4fe",
+                        "outline": "#727785",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-secondary-container": "#00714d",
+                        "on-tertiary-fixed": "#261a00",
+                        "on-tertiary": "#ffffff",
+                        "surface-dim": "#cbdbf5",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#956e00",
+                        "error": "#ba1a1a",
+                        "primary-container": "#2170e4",
+                        "on-surface-variant": "#424754",
+                        "tertiary-fixed": "#ffdf9f",
+                        "secondary-fixed": "#6ffbbe",
+                        "tertiary": "#765700",
+                        "on-tertiary-container": "#fffbff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#fefcff",
+                        "surface": "#f8f9ff",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-tint": "#005ac2",
+                        "tertiary-fixed-dim": "#f9bd22",
+                        "inverse-surface": "#213145",
+                        "inverse-primary": "#adc6ff",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-variant": "#d3e4fe",
+                        "surface-bright": "#f8f9ff",
+                        "on-primary-fixed": "#001a42",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "surface-container": "#e5eeff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "primary-fixed": "#d8e2ff",
+                        "primary": "#0058be",
+                        "primary-fixed-dim": "#adc6ff",
+                        "background": "#f8f9ff",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "12px",
+                        "margin-mobile": "20px",
+                        "base": "8px",
+                        "md": "24px",
+                        "margin-desktop": "auto",
+                        "xl": "64px",
+                        "xs": "4px",
+                        "lg": "40px",
+                        "max-width": "1200px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Quicksand"],
+                        "label-bold": ["Quicksand"],
+                        "scripture-quote": ["Playfair Display"],
+                        "body-regular": ["Quicksand"],
+                        "scripture-body": ["Playfair Display"],
+                        "caption": ["Quicksand"],
+                        "display-lg": ["Quicksand"],
+                        "headline-md": ["Quicksand"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "700"}],
+                        "scripture-quote": ["22px", {"lineHeight": "34px", "fontWeight": "600"}],
+                        "body-regular": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "scripture-body": ["18px", {"lineHeight": "30px", "fontWeight": "400"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Quicksand', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bento-card {
+            border-bottom: 4px solid rgba(0,0,0,0.1);
+            transition: transform 0.2s, border-bottom-width 0.1s;
+        }
+        .bento-card:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+        .progress-bar-shine {
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+            background-size: 200% 100%;
+            animation: shine 2s infinite;
+        }
+        @keyframes shine {
+            0% { background-position: -100% 0; }
+            100% { background-position: 100% 0; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 md:px-lg bg-surface dark:bg-surface-dim border-b-2 border-outline-variant dark:border-outline flat no shadows">
+<div class="font-display-lg-mobile text-display-lg-mobile font-bold text-primary dark:text-primary-fixed">BibleQuest</div>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-xs text-primary font-bold">
+<span class="material-symbols-outlined">local_fire_department</span>
+<span class="font-label-bold">14</span>
+</div>
+<div class="flex items-center gap-xs text-tertiary font-bold">
+<span class="material-symbols-outlined">grade</span>
+<span class="font-label-bold">2,450</span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low transition-colors p-2 rounded-full active:translate-y-0.5">language</button>
+</div>
+</header>
+<!-- SideNavBar (Desktop Only) -->
+<nav class="hidden md:flex flex-col fixed left-0 top-16 h-[calc(100vh-64px)] w-64 p-md gap-base bg-surface dark:bg-surface-dim border-r-2 border-outline-variant dark:border-outline flat no shadows">
+<div class="mb-lg px-4">
+<h2 class="font-display-lg text-display-lg font-bold text-primary dark:text-primary-fixed">Faith Journey</h2>
+<p class="text-on-surface-variant font-label-bold">Level 12 Disciple</p>
+</div>
+<a class="flex items-center gap-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl px-4 py-3 hover:scale-105 transition-transform active:translate-y-1" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-bold">Home</span>
+</a>
+<a class="flex items-center gap-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl px-4 py-3 hover:scale-105 transition-transform active:translate-y-1" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-bold">Library</span>
+</a>
+<a class="flex items-center gap-sm bg-primary-container text-on-primary-container rounded-xl px-4 py-3 border-b-4 border-primary font-label-bold transition-all" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-bold">Leaderboard</span>
+</a>
+<a class="flex items-center gap-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl px-4 py-3 hover:scale-105 transition-transform active:translate-y-1" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-bold">Profile</span>
+</a>
+<div class="mt-auto p-4 bg-tertiary-container rounded-xl text-on-tertiary-container bento-card border-b-tertiary">
+<p class="font-label-bold mb-2">Upgrade to Premium</p>
+<p class="text-xs">Unlock exclusive study guides and group challenges.</p>
+</div>
+</nav>
+<!-- Main Canvas -->
+<main class="pt-24 pb-24 md:pt-24 md:pl-72 md:pr-md px-margin-mobile max-w-max-width mx-auto">
+<!-- Header Section -->
+<section class="mb-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h1 class="font-display-lg text-display-lg text-primary mb-xs">Bronze League</h1>
+<p class="text-on-surface-variant font-body-regular">Top 10 players advance to Silver League in 2d 14h.</p>
+</div>
+<div class="flex gap-sm">
+<span class="bg-surface-container-highest text-primary px-4 py-2 rounded-full font-label-bold flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm">emoji_events</span>
+                        League Ranking
+                    </span>
+</div>
+</div>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Community Challenge Card -->
+<div class="lg:col-span-12 bg-white rounded-xl p-md bento-card border-outline-variant relative overflow-hidden">
+<div class="flex flex-col md:flex-row gap-md items-center">
+<div class="w-full md:w-1/3 h-48 rounded-lg overflow-hidden bg-surface-variant">
+<div class="w-full h-full bg-cover bg-center" data-alt="An atmospheric digital painting of a winding ancient Roman road stretching towards a golden sunset. The lighting is warm and inspiring, with lush green landscapes on either side. The style is clean, modern, and gamified with a soft luminous glow and vibrant colors following a primary blue and secondary green palette." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBGJCJJAbG26tssB5ge957ijkUK8To9-iGEYle3Rofbsmx1J-GjGob_H3AWiEdPcLDjNOFx6NFlu6rELBX9m8huKP8vQHobkzhjhzZE-7zdYhxFD55MhgwQRYvqmhDSSxqLx1HB5pFyO5xSwnz0Wju6Ef5aXziiHSdMmpCjfiPGbZzeEKfK5tuGh7uibYM5EXIhY3aUWUAQxFiBL2Jg-DWOFTcVZckFxpml4VDCLUiioPokLrtuS1am')"></div>
+</div>
+<div class="w-full md:w-2/3">
+<div class="flex items-center gap-xs text-secondary font-label-bold mb-xs">
+<span class="material-symbols-outlined text-sm">group</span>
+                            COMMUNITY CHALLENGE
+                        </div>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-xs">The Romans Roadmap</h2>
+<p class="text-on-surface-variant font-body-regular mb-md">Our global community is reading through Romans together! Join the journey and help reach the collective goal.</p>
+<div class="space-y-2">
+<div class="flex justify-between font-label-bold text-caption">
+<span>Group Progress</span>
+<span>74% Complete</span>
+</div>
+<div class="h-4 w-full bg-surface-container-high rounded-full overflow-hidden relative">
+<div class="h-full bg-secondary w-[74%] rounded-full progress-bar-shine relative"></div>
+</div>
+<div class="flex items-center gap-md mt-sm">
+<div class="flex -space-x-3">
+<img class="w-8 h-8 rounded-full border-2 border-white" data-alt="Professional circular headshot of a friendly diverse young man for a community UI. Bright lighting, clean background, modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVRngT4epSDZZD0uwtCn-1K90EtqQEtOIGQUSt3hcs23hhtSmM_Xz2SFem2zp6hwEl1gckb3p6gepR6AzFSJkDiF1YdCaHjWV1kDb50VwepTB_wHhkMqxy9LdVe7KCYErPeV4Y5Kufqn_iOyAdzFdtEMmRmWvcrv8f0of-A9TxeTgjNmT3JBhiHKs9jQbBO8VcgPfcsZRrdMV1rNvE_JsC24cb5RqcjIBlthTQGy8STJDmT4dGrWAu"/>
+<img class="w-8 h-8 rounded-full border-2 border-white" data-alt="Close up portrait of a smiling woman with glasses, soft natural lighting, vibrant high-quality digital photo for app profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAO2DHdb_YzbqnJLLNTrDF0z34i-4B9J3bN5k9TTHDh0Da03M_q9T7-Els_Uvay-wMGn8vMFfeadXUY47HioIyljphAtxcdflaZ8azwra2kN8AC49UtSvRylkCFE1nZF1FtYzLCj6_ITLS-pZ-RqF5eXEJ2YnrKl2_zt3UFKoPQD1LCpF40oGO6-5KqGXCWv9dLudLO1wqiqC-5RJdpHCvkyY2HVQxMScEYk5ZI-7AAdth2MoqIsye"/>
+<img class="w-8 h-8 rounded-full border-2 border-white" data-alt="Portrait of an elderly man with a kind smile, studio lighting, professional and approachable look for a social application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD1dBnoZzfhTTV3CKXeqBe0n6WJcuoBfVQ4ffYl2YrP3LBcVf5YhJTLux5SUWeRFxj3U-eEtJ6OkEhQ2iGp_ASQC1ek1DdfAPFaih8bmLxP0pwlWmtBi26_nM6oOqItu26cMzqYLsAE0wfC90LgTM3ftYg5Z6NuADsmvAbXveA11d2XrTzCWZ8nqBEI7roRZt2arAhDaTGswvpXB4D-A4bKFP77ToYo2u0Esrrv2DxYqn22D2ST2qE"/>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center text-[10px] font-bold border-2 border-white">+4k</div>
+</div>
+<span class="text-caption text-on-surface-variant">4,281 Disciples participating</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Top 3 Podium -->
+<div class="lg:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-gutter my-base">
+<!-- Rank 2: Silver -->
+<div class="bg-white rounded-xl p-md bento-card border-outline-variant flex flex-col items-center text-center order-2 md:order-1">
+<div class="relative mb-md">
+<div class="w-24 h-24 rounded-full border-4 border-slate-300 p-1">
+<img class="w-full h-full rounded-full object-cover" data-alt="Profile photo of a young male student, energetic expression, clean light blue background, high quality portrait for leaderboards." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtdRDkKzO5-Eu_2GfbbAUTol9UrfMXqd99dbFVta7cd18SvmzcSDaEmyZbiFS1OWVOuVLUGdtS2462T8x666ekWcI8lRmidPsrywPsqb-39zrUWSvrz-Q8IH1N-AVz62dqTm8dMRb7CUaNFFrB6akGlpgadsPecNB1oSRm82B6yDoSrAE2FAGw-BaArdUlLHZsFvVFB-xEq0Kq1kwWfRdxZ5fR6KAYcxkUcoltI9WNOAd-czxK-RdH"/>
+</div>
+<div class="absolute -bottom-2 -right-2 w-10 h-10 bg-slate-200 border-2 border-slate-400 rounded-full flex items-center justify-center font-bold text-slate-700">2</div>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Gabriel M.</h3>
+<p class="text-on-surface-variant font-label-bold mb-md">1,840 XP</p>
+<button class="w-full py-2 bg-surface-container-low text-primary rounded-xl font-label-bold hover:bg-primary-container hover:text-on-primary-container transition-colors">Add Friend</button>
+</div>
+<!-- Rank 1: Gold -->
+<div class="bg-primary-container rounded-xl p-md bento-card border-primary flex flex-col items-center text-center scale-105 z-10 order-1 md:order-2 shadow-xl">
+<div class="relative mb-md">
+<div class="w-32 h-32 rounded-full border-4 border-yellow-400 p-1">
+<img class="w-full h-full rounded-full object-cover" data-alt="Close up portrait of a middle aged woman with a joyful expression, wearing a bright yellow shirt, vibrant colors, professional lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz1RGakfdls31Hg4qMEn3z_Syz_OMSWErJwYI9JC9qaXtWWqxvPbkEObj04FBYFs8vp7W2bHV_cVMrhEo-zC9Jdv8tT4pe2YUrXf3lfAByFG68lus2QU7f-7-OFiqnKyF7gMo4ps7t561bMsXQWxWHKrldkE4MZOD3tOxUbAAvgAKxPnhdA0ayltecNSGxQteb3wjnpT5ZdrSeGK-CqsgyWYtHGenUSxDDDj6c3VtYTpEGOUIjvK-6"/>
+</div>
+<div class="absolute -bottom-2 -right-2 w-12 h-12 bg-yellow-400 border-2 border-yellow-600 rounded-full flex items-center justify-center font-bold text-yellow-900 text-xl">1</div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 material-symbols-outlined text-yellow-400 text-4xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-white">Sarah Chen</h3>
+<p class="text-primary-fixed font-label-bold mb-md">2,150 XP</p>
+<button class="w-full py-3 bg-white text-primary rounded-xl font-label-bold border-b-4 border-slate-200 active:translate-y-1 active:border-b-0 transition-all">Friend</button>
+</div>
+<!-- Rank 3: Bronze -->
+<div class="bg-white rounded-xl p-md bento-card border-outline-variant flex flex-col items-center text-center order-3">
+<div class="relative mb-md">
+<div class="w-24 h-24 rounded-full border-4 border-orange-400 p-1">
+<img class="w-full h-full rounded-full object-cover" data-alt="Portrait of a creative looking man with a beard and artistic style, soft lighting, modern social media profile aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9LnAiv431RHMB906nLWwRINJs6L3HMZV-EebDeIQn0WroMGbubCry_TWmhQp6de6IyVYHo0X10I3-suqGHmVjnLS3vlpkQ11ekKp9M5saWIqqDzhNNAhMGuors9Y2HMJCbOO2FxmQv6RgInxeKoYJJGbiimhVlBCsLfuc5_w7NhMKShHMpN43zAGtS_KzWhXSKoEqPk57wrSMJT9WGkoU7vZ06sYSkIQbgS8nXe-Ke7LiiySticxB"/>
+</div>
+<div class="absolute -bottom-2 -right-2 w-10 h-10 bg-orange-200 border-2 border-orange-400 rounded-full flex items-center justify-center font-bold text-orange-800">3</div>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Lucas V.</h3>
+<p class="text-on-surface-variant font-label-bold mb-md">1,620 XP</p>
+<button class="w-full py-2 bg-surface-container-low text-primary rounded-xl font-label-bold hover:bg-primary-container hover:text-on-primary-container transition-colors">Add Friend</button>
+</div>
+</div>
+<!-- Main Leaderboard List -->
+<div class="lg:col-span-12 space-y-base">
+<div class="flex items-center justify-between px-4 text-outline font-label-bold text-caption">
+<span>RANK &amp; NAME</span>
+<span>WEEKLY XP</span>
+</div>
+<!-- Player Rows -->
+<div class="bg-white rounded-xl p-sm flex items-center justify-between bento-card border-outline-variant">
+<div class="flex items-center gap-md">
+<span class="w-6 text-center font-bold text-on-surface-variant">4</span>
+<img class="w-10 h-10 rounded-full bg-surface-variant" data-alt="App avatar of a smiling teenager with a headset, bright casual wear, vibrant background, clean digital portrait." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbP9g0u_4-hziVxMWZ62j2WEZHPaQguFrCxr6d-OSoeDrCzxQO_ZDH2uaX-8mLAZw85GNjxXCo166EFr4ifT00XA4000iqg5Bs-07nRqJWzYMwYb4dxqfwO_dd46JK3PFDOIEkKNc68eKeIm1l29wR9mKLYrx6xjQcD5UOilHnkgG9iJRPH8r0rUji_KlRoy9XWMg5clFWU5XkSNjV66nUkJOZHCt5EDjDWz72PiY3FQz9Z-b-YIyb"/>
+<div>
+<p class="font-label-bold text-on-surface">Alex Rivera</p>
+<p class="text-caption text-secondary">Friend</p>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<span class="font-label-bold text-on-surface">1,450 XP</span>
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</div>
+</div>
+<div class="bg-white rounded-xl p-sm flex items-center justify-between bento-card border-outline-variant">
+<div class="flex items-center gap-md">
+<span class="w-6 text-center font-bold text-on-surface-variant">5</span>
+<img class="w-10 h-10 rounded-full bg-surface-variant" data-alt="Digital profile avatar of a woman with a hijab, smiling, professional lighting, clean modern studio aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9s61kidUsus5O7MH_nZQ4fe0d2r_kcdAwOnukoNximOwVZWa6glSIONxej_ajq_jHA5wey54V91DKkeyEY3z4K9W_CBlnEPbYadXhNijqzt0Dv00kAdDDUnaiAolIaUnE7SGZ7-wn-XCSMi1g0ZAiiraVx5p5AMuRxajScCEp2OrvqYeq5fO3JLSwHSZ4zLaSNrUlgJMXnEZpScla1mpJcGNq8GeaF29pozgzw5sqDFVub7i4mvUv"/>
+<div>
+<p class="font-label-bold text-on-surface">Fatima K.</p>
+<p class="text-caption text-outline">Level 8</p>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<span class="font-label-bold text-on-surface">1,320 XP</span>
+<button class="bg-surface-container-high px-4 py-1.5 rounded-full text-primary font-label-bold text-xs hover:bg-primary-container hover:text-on-primary-container transition-colors">Follow</button>
+</div>
+</div>
+<div class="bg-primary-container/10 rounded-xl p-sm flex items-center justify-between bento-card border-primary/30 ring-2 ring-primary">
+<div class="flex items-center gap-md">
+<span class="w-6 text-center font-bold text-primary">6</span>
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">ME</div>
+<div>
+<p class="font-label-bold text-on-surface">You</p>
+<p class="text-caption text-primary">Bronze League</p>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<span class="font-label-bold text-primary">1,280 XP</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">expand_less</span>
+</div>
+</div>
+<div class="bg-white rounded-xl p-sm flex items-center justify-between bento-card border-outline-variant opacity-80">
+<div class="flex items-center gap-md">
+<span class="w-6 text-center font-bold text-on-surface-variant">7</span>
+<img class="w-10 h-10 rounded-full bg-surface-variant" data-alt="App avatar of a man with spectacles, friendly gaze, outdoor natural light background, crisp high resolution portrait." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQ9cDBebv7q_rzrVkbHqDo_DgKXsn4wLvIftb1sFPUT751z-Gzv-cwo_81n7zlNgJDtX_4JUbbkMMLF_7jGDYizbnvb5FjKT_xQeTX5cHeKmeNEYSLD7a4gFaoZWYFw9gHSnx9BWPqtIxQPaDYXrCk30Aeq68K5z7oKQqS97uUFXW6NapDwrzM8R_VoM9zo3y1DOa-3arprEfO1poSkJgZjwI36PnuXn9yGYjgDfsoasUZPMFJWtdl"/>
+<div>
+<p class="font-label-bold text-on-surface">David P.</p>
+<p class="text-caption text-outline">Friend</p>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<span class="font-label-bold text-on-surface">1,110 XP</span>
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center bg-surface dark:bg-surface-dim px-4 pb-4 pt-2 border-t-2 border-outline-variant dark:border-outline flat no shadows rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-outline p-2 hover:text-primary transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-bold text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline p-2 hover:text-primary transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-bold text-[10px]">Library</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-6 py-2 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-bold text-[10px]">Leaderboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline p-2 hover:text-primary transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-bold text-[10px]">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for following/friending
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(this.innerText === 'Follow') {
+                    this.innerText = 'Following';
+                    this.classList.remove('bg-surface-container-high', 'text-primary');
+                    this.classList.add('bg-secondary-container', 'text-on-secondary-container');
+                } else if(this.innerText === 'Add Friend') {
+                    this.innerText = 'Pending';
+                    this.classList.add('opacity-50');
+                }
+            });
+        });
+    </script>
+</body></html>
