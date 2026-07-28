@@ -85,6 +85,12 @@ export default async function WelcomePage() {
             <p className="text-xs font-medium text-outline">
               Rated 4.9/5 by our community
             </p>
+            <Link
+              href="/about"
+              className="text-xs font-bold text-primary hover:underline"
+            >
+              About &amp; data sources
+            </Link>
           </div>
         </div>
       </main>
