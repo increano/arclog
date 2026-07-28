@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BibleQuest - Set Your Goal</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Scripts -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#0058be",
+                      "on-background": "#0b1c30",
+                      "inverse-primary": "#adc6ff",
+                      "surface-bright": "#f8f9ff",
+                      "secondary": "#006c49",
+                      "surface-container": "#e5eeff",
+                      "background": "#f8f9ff",
+                      "inverse-on-surface": "#eaf1ff",
+                      "secondary-fixed-dim": "#4edea3",
+                      "surface-variant": "#d3e4fe",
+                      "surface": "#f8f9ff",
+                      "outline": "#727785",
+                      "error": "#ba1a1a",
+                      "surface-container-low": "#eff4ff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed": "#261a00",
+                      "surface-container-highest": "#d3e4fe",
+                      "on-secondary": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "tertiary-fixed": "#ffdf9f",
+                      "error-container": "#ffdad6",
+                      "inverse-surface": "#213145",
+                      "on-primary-fixed": "#001a42",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed-dim": "#f9bd22",
+                      "tertiary": "#765700",
+                      "surface-tint": "#005ac2",
+                      "on-secondary-fixed": "#002113",
+                      "on-surface-variant": "#424754",
+                      "surface-container-high": "#dce9ff",
+                      "on-primary-fixed-variant": "#004395",
+                      "primary-fixed-dim": "#adc6ff",
+                      "on-tertiary": "#ffffff",
+                      "outline-variant": "#c2c6d6",
+                      "tertiary-container": "#956e00",
+                      "on-surface": "#0b1c30",
+                      "primary-fixed": "#d8e2ff",
+                      "on-error-container": "#93000a",
+                      "on-secondary-container": "#00714d",
+                      "on-tertiary-fixed-variant": "#5c4300",
+                      "secondary-container": "#6cf8bb",
+                      "on-tertiary-container": "#fffbff",
+                      "primary-container": "#2170e4",
+                      "on-primary-container": "#fefcff",
+                      "surface-dim": "#cbdbf5",
+                      "secondary-fixed": "#6ffbbe",
+                      "on-secondary-fixed-variant": "#005236"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "base": "8px",
+                      "margin-mobile": "20px",
+                      "lg": "40px",
+                      "max-width": "1200px",
+                      "md": "24px",
+                      "xl": "64px",
+                      "sm": "12px",
+                      "gutter": "16px",
+                      "margin-desktop": "auto"
+              },
+              "fontFamily": {
+                      "label-bold": ["Quicksand"],
+                      "display-lg-mobile": ["Quicksand"],
+                      "scripture-quote": ["Playfair Display"],
+                      "display-lg": ["Quicksand"],
+                      "body-regular": ["Quicksand"],
+                      "caption": ["Quicksand"],
+                      "scripture-body": ["Playfair Display"],
+                      "headline-md": ["Quicksand"]
+              },
+              "fontSize": {
+                      "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "700"}],
+                      "display-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "scripture-quote": ["22px", {"lineHeight": "34px", "fontWeight": "600"}],
+                      "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-regular": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                      "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "scripture-body": ["18px", {"lineHeight": "30px", "fontWeight": "400"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .option-card {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-bottom: 4px solid #d3e4fe;
+        }
+
+        .option-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .option-card.active {
+            border-color: #0058be;
+            background-color: #e5eeff;
+            transform: translateY(2px);
+            border-bottom-width: 0px;
+            margin-bottom: 4px;
+        }
+
+        .continue-btn {
+            box-shadow: 0 4px 0 #004395;
+            transition: all 0.1s active;
+        }
+
+        .continue-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #004395;
+        }
+
+        .progress-liquid {
+            background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.3) 100%);
+            animation: flow 2s linear infinite;
+        }
+
+        @keyframes flow {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-regular text-body-regular overflow-x-hidden">
+<!-- Top AppBar (Identity Anchor) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 md:px-lg bg-surface border-b-2 border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="font-display-lg-mobile text-display-lg-mobile font-bold text-primary">BibleQuest</span>
+</div>
+<div class="flex items-center gap-base">
+<button class="p-2 text-primary hover:bg-surface-container-low rounded-full transition-colors active:translate-y-0.5">
+<span class="material-symbols-outlined" data-icon="local_fire_department">local_fire_department</span>
+</button>
+<button class="p-2 text-primary hover:bg-surface-container-low rounded-full transition-colors active:translate-y-0.5">
+<span class="material-symbols-outlined" data-icon="language">language</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-grow pt-24 pb-32 px-margin-mobile max-w-max-width mx-auto w-full flex flex-col items-center">
+<!-- Onboarding Progress -->
+<div class="w-full max-w-md mb-lg">
+<div class="h-4 w-full bg-surface-container rounded-full overflow-hidden relative">
+<div class="h-full w-2/3 bg-secondary rounded-full relative">
+<div class="absolute inset-0 progress-liquid"></div>
+</div>
+</div>
+<div class="mt-base flex justify-between items-center">
+<span class="font-label-bold text-label-bold text-on-surface-variant">Step 2 of 3</span>
+<span class="font-label-bold text-label-bold text-secondary">Setting the Path</span>
+</div>
+</div>
+<!-- Heading Area -->
+<div class="text-center mb-xl">
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-on-background mb-sm">
+                What is your daily goal?
+            </h1>
+<p class="text-on-surface-variant max-w-sm mx-auto">
+                Setting a daily commitment helps you build a lasting habit and grow deeper in faith.
+            </p>
+</div>
+<!-- Options Bento Grid-ish Layout -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter w-full max-w-2xl" id="goal-options">
+<!-- Casual -->
+<div class="option-card group bg-surface-container-lowest p-md rounded-xl flex items-center gap-md cursor-pointer border-2 border-outline-variant hover:border-primary transition-all" data-goal="casual">
+<div class="w-16 h-16 flex items-center justify-center bg-surface-container rounded-xl group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-background">Casual</h3>
+<p class="text-on-surface-variant">5 mins / day</p>
+</div>
+</div>
+<!-- Regular -->
+<div class="option-card group bg-surface-container-lowest p-md rounded-xl flex items-center gap-md cursor-pointer border-2 border-outline-variant hover:border-primary transition-all active" data-goal="regular">
+<div class="w-16 h-16 flex items-center justify-center bg-primary-container rounded-xl group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl text-on-primary-container" data-icon="local_fire_department" data-weight="fill" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-background">Regular</h3>
+<p class="text-on-surface-variant">10 mins / day</p>
+</div>
+</div>
+<!-- Serious -->
+<div class="option-card group bg-surface-container-lowest p-md rounded-xl flex items-center gap-md cursor-pointer border-2 border-outline-variant hover:border-primary transition-all" data-goal="serious">
+<div class="w-16 h-16 flex items-center justify-center bg-surface-container rounded-xl group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="emoji_events" data-weight="fill" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-background">Serious</h3>
+<p class="text-on-surface-variant">15 mins / day</p>
+</div>
+</div>
+<!-- Intense -->
+<div class="option-card group bg-surface-container-lowest p-md rounded-xl flex items-center gap-md cursor-pointer border-2 border-outline-variant hover:border-primary transition-all" data-goal="intense">
+<div class="w-16 h-16 flex items-center justify-center bg-surface-container rounded-xl group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="rocket_launch" data-weight="fill" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-background">Intense</h3>
+<p class="text-on-surface-variant">20 mins / day</p>
+</div>
+</div>
+</div>
+<!-- Atmospheric Scripture Block -->
+<div class="mt-xl p-lg rounded-3xl bg-surface-container-low max-w-xl text-center relative overflow-hidden">
+<div class="absolute -top-4 -left-4 opacity-10">
+<span class="material-symbols-outlined text-9xl">format_quote</span>
+</div>
+<p class="font-scripture-quote text-scripture-quote text-on-surface italic mb-sm">
+                "Thy word is a lamp unto my feet, and a light unto my path."
+            </p>
+<p class="font-label-bold text-label-bold text-primary tracking-widest uppercase">Psalm 119:105</p>
+</div>
+</main>
+<!-- Bottom Action Bar (Contextual) -->
+<footer class="fixed bottom-0 left-0 w-full bg-surface p-4 pb-8 md:pb-4 border-t-2 border-outline-variant">
+<div class="max-w-md mx-auto">
+<button class="continue-btn w-full bg-primary text-on-primary font-display-lg-mobile text-display-lg-mobile py-4 rounded-2xl flex items-center justify-center gap-base transition-all hover:brightness-110 active:translate-y-1 active:shadow-none" id="continue-btn">
+                Continue
+                <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</footer>
+<!-- Image for Visual Context (Background/Side Element) -->
+<div class="hidden lg:block fixed right-0 bottom-32 -z-10 opacity-40">
+<img class="w-[400px] object-contain" data-alt="A luminous digital illustration of an open Bible with glowing warm particles rising from the pages. The art style is modern and clean with a vibrant blue and white color palette, featuring soft gradients and minimalist geometric shapes. The overall mood is peaceful, inspiring, and spiritually uplifting, perfectly matching a high-end gamified education app's design language." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHE6HJgHKDP2ni1rOQFuzc8Il28kwSM0JlQeE-nEEruE0Xu7U7aCHZY6G8xpbJl5dK0SYhi694xENY1bLL9N3AdHDao1u5N9XmgQtSqO59Grc_zt41BTsNuVkFy36BCYlStPMQSOmTEjvQK8dOT6VNfykLpuY_NEpJ4RzSden_Q_SzGK74sH-jt9D2VEw3HLjxJXR3JsISDi1yTHObZQ6kCsY_d9KJVosMYp4D9gfB98rlXgmVVgSQ"/>
+</div>
+<script>
+        // Simple Interaction Logic
+        const options = document.querySelectorAll('.option-card');
+        const continueBtn = document.getElementById('continue-btn');
+
+        options.forEach(card => {
+            card.addEventListener('click', () => {
+                // Remove active class from all
+                options.forEach(c => {
+                    c.classList.remove('active');
+                    c.querySelector('.w-16').classList.remove('bg-primary-container');
+                    c.querySelector('.w-16').classList.add('bg-surface-container');
+                    const icon = c.querySelector('.material-symbols-outlined');
+                    if (icon) icon.classList.replace('text-on-primary-container', 'text-primary');
+                });
+
+                // Add active to current
+                card.classList.add('active');
+                const iconContainer = card.querySelector('.w-16');
+                iconContainer.classList.remove('bg-surface-container');
+                iconContainer.classList.add('bg-primary-container');
+                const icon = card.querySelector('.material-symbols-outlined');
+                if (icon) icon.classList.replace('text-primary', 'text-on-primary-container');
+
+                // Trigger mini animation
+                card.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    card.style.transform = '';
+                }, 100);
+            });
+        });
+
+        continueBtn.addEventListener('click', () => {
+            const selected = document.querySelector('.option-card.active').dataset.goal;
+            console.log('User selected goal:', selected);
+            
+            // Success micro-interaction
+            continueBtn.innerHTML = `Setting up... <span class="material-symbols-outlined animate-spin">sync</span>`;
+            setTimeout(() => {
+                continueBtn.innerHTML = `Ready! <span class="material-symbols-outlined">check_circle</span>`;
+                continueBtn.classList.replace('bg-primary', 'bg-secondary');
+            }, 800);
+        });
+    </script>
+</body></html>

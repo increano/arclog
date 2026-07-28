@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Welcome to BibleQuest</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Scripts -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#0058be",
+                    "on-background": "#0b1c30",
+                    "inverse-primary": "#adc6ff",
+                    "surface-bright": "#f8f9ff",
+                    "secondary": "#006c49",
+                    "surface-container": "#e5eeff",
+                    "background": "#f8f9ff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "surface-variant": "#d3e4fe",
+                    "surface": "#f8f9ff",
+                    "outline": "#727785",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#eff4ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#261a00",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-secondary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed": "#ffdf9f",
+                    "error-container": "#ffdad6",
+                    "inverse-surface": "#213145",
+                    "on-primary-fixed": "#001a42",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#f9bd22",
+                    "tertiary": "#765700",
+                    "surface-tint": "#005ac2",
+                    "on-secondary-fixed": "#002113",
+                    "on-surface-variant": "#424754",
+                    "surface-container-high": "#dce9ff",
+                    "on-primary-fixed-variant": "#004395",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#c2c6d6",
+                    "tertiary-container": "#956e00",
+                    "on-surface": "#0b1c30",
+                    "primary-fixed": "#d8e2ff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#00714d",
+                    "on-tertiary-fixed-variant": "#5c4300",
+                    "secondary-container": "#6cf8bb",
+                    "on-tertiary-container": "#fffbff",
+                    "primary-container": "#2170e4",
+                    "on-primary-container": "#fefcff",
+                    "surface-dim": "#cbdbf5",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-secondary-fixed-variant": "#005236"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "base": "8px",
+                    "margin-mobile": "20px",
+                    "lg": "40px",
+                    "max-width": "1200px",
+                    "md": "24px",
+                    "xl": "64px",
+                    "sm": "12px",
+                    "gutter": "16px",
+                    "margin-desktop": "auto"
+            },
+            "fontFamily": {
+                    "label-bold": ["Quicksand"],
+                    "display-lg-mobile": ["Quicksand"],
+                    "scripture-quote": ["Playfair Display"],
+                    "display-lg": ["Quicksand"],
+                    "body-regular": ["Quicksand"],
+                    "caption": ["Quicksand"],
+                    "scripture-body": ["Playfair Display"],
+                    "headline-md": ["Quicksand"]
+            },
+            "fontSize": {
+                    "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "700"}],
+                    "display-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "scripture-quote": ["22px", {"lineHeight": "34px", "fontWeight": "600"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-regular": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "scripture-body": ["18px", {"lineHeight": "30px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .btn-shadow-primary {
+            box-shadow: 0 4px 0 0 #004395;
+        }
+        .btn-shadow-primary:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 0 #004395;
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .liquid-progress {
+            background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.3) 100%);
+            background-size: 200% 100%;
+            animation: shine 2s infinite linear;
+        }
+        @keyframes shine {
+            to { background-position: 200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col items-center">
+<!-- Top Navigation (Simplified for Splash) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 md:px-lg">
+<div class="font-display-lg-mobile text-display-lg-mobile font-bold text-primary">BibleQuest</div>
+<div class="flex items-center gap-base">
+<span class="material-symbols-outlined text-primary" data-icon="language">language</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center w-full max-w-[1200px] px-margin-mobile pt-24 pb-12">
+<!-- Hero Illustration Area -->
+<div class="relative w-full max-w-md aspect-square flex items-center justify-center mb-8">
+<!-- Animated Background Aura -->
+<div class="absolute inset-0 bg-primary-container opacity-20 rounded-full blur-[80px] animate-pulse"></div>
+<!-- Friendly Illustration -->
+<div class="relative z-10 w-full h-full p-8">
+<div class="w-full h-full rounded-full border-2 border-outline-variant bg-white shadow-lg overflow-hidden flex items-center justify-center animate-float">
+<img class="w-full h-full object-cover" data-alt="A warm, vibrant digital illustration in a friendly gamified style. A young person sits comfortably on a soft hill under a golden rising sun, focused on a glowing ancient-style book. The colors are dominated by warm yellows, soft blues, and lush greens. The style is clean and minimalist with thick, friendly line-work and a bright, welcoming atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBroSOoPXgr4dVDxlz1uSUeV35nW0pengsZJMApByUVH5EZQMeqFndfjSFmX9oYdjLbks6qisIJCrHRfWqYhsW1R5QvYzB1MLIIuC2yvBdXUK-nW93JpVpmYNsMTTypvrxymMFeiQohsOcTFzQrTgWDX_4M1HYkmQ8rj8Q6vyocwMtSXsVmvMPQ0cVlXKowd2aExl0yLhDQKqGpwcu7JfxQKny865IWi7jWnYolxCntvuVQSn8yfS4S"/>
+</div>
+</div>
+<!-- Floating Decorative Icons -->
+<div class="absolute top-10 left-0 bg-secondary-container p-3 rounded-xl shadow-md rotate-[-12deg] z-20">
+<span class="material-symbols-outlined text-on-secondary-container text-display-lg-mobile" data-icon="menu_book">menu_book</span>
+</div>
+<div class="absolute bottom-20 right-0 bg-tertiary-fixed p-3 rounded-xl shadow-md rotate-[15deg] z-20">
+<span class="material-symbols-outlined text-on-tertiary-fixed text-display-lg-mobile" data-icon="grade">grade</span>
+</div>
+</div>
+<!-- Value Proposition Text -->
+<div class="text-center space-y-md max-w-2xl mb-xl">
+<h1 class="font-display-lg text-display-lg md:text-[48px] md:leading-[56px] text-on-background tracking-tight">
+                Master the Word, <br class="hidden md:block"/>
+<span class="text-primary italic">One Verse</span> at a Time.
+            </h1>
+<p class="font-body-regular text-body-regular text-on-surface-variant px-4">
+                Join <span class="font-label-bold text-on-surface">100,000+ disciples</span> on an engaging, gamified journey through the scriptures. Build a lasting spiritual habit with daily rewards and community streaks.
+            </p>
+</div>
+<!-- Action Section -->
+<div class="w-full max-w-sm space-y-md flex flex-col items-center">
+<!-- Primary CTA -->
+<button class="group w-full h-[64px] bg-primary text-on-primary font-label-bold text-[18px] rounded-xl flex items-center justify-center gap-base transition-all duration-100 btn-shadow-primary active:translate-y-1">
+                Get Started
+                <span class="material-symbols-outlined transition-transform group-hover:translate-x-1" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Secondary Link -->
+<button class="w-full py-base font-label-bold text-primary hover:bg-surface-container-low transition-colors rounded-lg flex items-center justify-center gap-xs">
+                I already have an account
+            </button>
+<!-- Social Proof / Badge Area (Subtle) -->
+<div class="pt-base flex flex-col items-center gap-sm">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a smiling young woman with a warm, inclusive expression, 3d rendered gamified avatar style, bright lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBig5ll7BWNSZTPjWsrOpcIQRpUtIkn395oKq-2ykmA507t9Ija3rL8FuRtgn8_nB88EkvDq1HB9jk18w32le3DLjr6FB-D1SUoUbjoV3HSnopMcK45Bkj5sDMicFZOzEBSK8V9s6R24Yw9watM5w3OVbdre9Qmgx318mzn_CerLo-8xPiha5Xz8ab1Jsra0py-Ye5jj4f1ds4EzaFDsm_nNvJKcFlUfgnDiZv25uQjeYruKFADCSbL"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of an older man with glasses, friendly and wisdom-filled expression, 3d rendered gamified avatar style, soft natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDu0qFh1yurKym-R-fZQ4CuqYh4KEL-FJmABKZHzpRFgujNdOHLB3sprgMtwicLxMlUrRrJ7X4mzJ3Fi5Ew8bXa9IJvRkFo2XLDPgdc65I8jbMdiX_WKN0G9tD5bSu5QTMp7xxHhBTg-VnDLHlBlo4IactqnD4Fv1QW2pKERU5ZX4a5Au9JFcp_Sl8iaQmIMqro9ApQ25UMMBjO6Qmf9CqMRKr8Nt2Vz51JQevpR3qj-5cLcthzin8G"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A stylish teenager with a joyful expression, 3d rendered gamified avatar style, vibrant colorful background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKhUvA7VHDYrxjDmw8JQvdlMBP6NhcaK84wAmTbBlVKC_XDa2hT79ovJoHZWb8fVsTVj-JvmI3XdT_FJ7q12jyezWbuvYMJF1QC0p7dBQjw3Noq64qv9qSbelfUzdsuBhZkVgi5-2oeaYhWTnbxCpYN0u3Ge83aAV5CY02Z6buYubUsfsU0L-WWUr41fuU0n5hW17GHzc4VfYbnulA0wYtFLRd6_zRB5Qfz03w4fPoWEWmOj9ewruG"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-primary-container flex items-center justify-center text-[10px] text-white font-bold">
+                        +99k
+                    </div>
+</div>
+<p class="font-caption text-caption text-outline">Rated 4.9/5 by our community</p>
+</div>
+</div>
+</main>
+<!-- Background Decorative Elements -->
+<div class="fixed top-[-10%] right-[-5%] w-[400px] h-[400px] bg-secondary-container opacity-10 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="fixed bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-tertiary-fixed opacity-10 rounded-full blur-[120px] pointer-events-none"></div>
+<!-- Micro-interaction Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.querySelector('button');
+            btn.addEventListener('mouseenter', () => {
+                // Subtle haptic feedback could be added here for mobile
+            });
+
+            // Handle smooth entry animations
+            const elements = document.querySelectorAll('h1, p, .max-w-sm, .relative.z-10');
+            elements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'all 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body></html>

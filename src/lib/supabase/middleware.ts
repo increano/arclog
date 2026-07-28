@@ -42,7 +42,17 @@ export async function updateSession(request: NextRequest) {
 
   if (path === "/login" && isAuthed) {
     const url = request.nextUrl.clone();
-    url.pathname = "/me";
+    const next = request.nextUrl.searchParams.get("next");
+    url.pathname =
+      next && next.startsWith("/") && !next.startsWith("//") ? next : "/me";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
+  // Soft-wall save screen is for guests only.
+  if (path === "/onboarding/save" && isAuthed) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/onboarding/translation";
     return NextResponse.redirect(url);
   }
 
