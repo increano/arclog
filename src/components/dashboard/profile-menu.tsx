@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { signOut } from "@/lib/actions/auth";
 
@@ -31,7 +32,7 @@ export function ProfileMenu() {
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="flex h-10 w-10 items-center justify-center rounded-full text-primary hover:bg-surface-container-low"
+        className="flex h-10 w-10 items-center justify-center rounded-full text-primary"
         aria-label="Profile"
         aria-expanded={open}
         aria-haspopup="menu"
@@ -45,11 +46,20 @@ export function ProfileMenu() {
           aria-label="Profile menu"
           className="absolute right-0 top-full z-50 mt-2 min-w-[180px] overflow-hidden rounded-xl border-2 border-outline-variant bg-surface-container-lowest shadow-lg"
         >
+          <Link
+            href="/me/profile"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-bold text-on-surface transition-colors hover:bg-surface-container-low"
+          >
+            <Icon name="person" />
+            View profile
+          </Link>
           <form action={signOut}>
             <button
               type="submit"
               role="menuitem"
-              className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-bold text-on-surface transition-colors hover:bg-surface-container-low"
+              className="flex w-full items-center gap-3 border-t border-outline-variant px-4 py-3 text-left text-sm font-bold text-on-surface transition-colors hover:bg-surface-container-low"
             >
               <Icon name="logout" />
               Log out

@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
+import { ProgressBar, StatTile } from "@/components/dashboard/ui";
 
 type DashboardData = {
   displayName: string;
@@ -14,26 +16,39 @@ type DashboardData = {
   achievementCount: number;
   latestReference: string | null;
   latestTranslationSlug: string | null;
+  activeLessonHref?: string;
 };
 
 const PATH_NODES = [
-  { title: "Creation", icon: "check_circle", state: "done" },
-  { title: "The Fall", icon: "check_circle", state: "done", offset: "-translate-x-12" },
-  { title: "Noah", icon: "menu_book", state: "active" },
-  { title: "Babel", icon: "lock", state: "locked", offset: "translate-x-16" },
-  { title: "Abraham", icon: "lock", state: "locked" },
-] as const;
+  { title: "Creation", icon: "check_circle", state: "done" as const },
+  {
+    title: "The Fall",
+    icon: "check_circle",
+    state: "done" as const,
+    offset: "-translate-x-12",
+  },
+  { title: "John 1", icon: "menu_book", state: "active" as const },
+  {
+    title: "Babel",
+    icon: "lock",
+    state: "locked" as const,
+    offset: "translate-x-16",
+  },
+  { title: "Abraham", icon: "lock", state: "locked" as const },
+];
 
 function PathNode({
   title,
   icon,
   state,
   offset,
+  href,
 }: {
   title: string;
   icon: string;
   state: "done" | "active" | "locked";
   offset?: string;
+  href?: string;
 }) {
   const wrapperClass = offset ?? "";
   const stateClass =
@@ -43,12 +58,16 @@ function PathNode({
         ? "border-b-8 border-on-primary-fixed-variant bg-primary text-on-primary ring-8 ring-primary-container/30"
         : "border-b-8 border-outline-variant bg-surface-dim text-outline opacity-80";
 
-  return (
-    <div className={`relative z-10 ${wrapperClass}`}>
+  const node = (
+    <>
       <div
         className={`flex h-24 w-24 items-center justify-center rounded-full transition-transform hover:scale-105 ${stateClass} ${state === "active" ? "h-28 w-28" : ""}`}
       >
-        <Icon name={icon} filled={state === "done"} className={state === "active" ? "text-5xl" : "text-4xl"} />
+        <Icon
+          name={icon}
+          filled={state === "done"}
+          className={state === "active" ? "text-5xl" : "text-4xl"}
+        />
       </div>
       {state === "active" ? (
         <div className="mt-4 rounded-full bg-primary px-4 py-1 text-center text-sm font-bold text-on-primary">
@@ -59,28 +78,18 @@ function PathNode({
           {title}
         </div>
       )}
-    </div>
+    </>
   );
-}
 
-function StatCard({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: string;
-  icon: string;
-}) {
   return (
-    <div className="rounded-2xl border-2 border-outline-variant bg-surface-container-lowest p-4">
-      <div className="mb-2 flex items-center gap-2 text-primary">
-        <Icon name={icon} />
-        <span className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-          {label}
-        </span>
-      </div>
-      <p className="text-2xl font-bold text-on-surface">{value}</p>
+    <div className={`relative z-10 ${wrapperClass}`}>
+      {href && state === "active" ? (
+        <Link href={href} className="block text-center">
+          {node}
+        </Link>
+      ) : (
+        node
+      )}
     </div>
   );
 }
@@ -99,9 +108,9 @@ export function LearnerDashboard({
   achievementCount,
   latestReference,
   latestTranslationSlug,
+  activeLessonHref = "/me/lessons",
 }: DashboardData) {
   const goalMax = 500;
-  const goalProgress = Math.max(0, Math.min(100, (xp / goalMax) * 100));
 
   return (
     <div className="flex w-full flex-col gap-8 px-margin-mobile pb-8 pt-4 md:px-10 md:pt-6 lg:flex-row lg:items-start">
@@ -119,7 +128,11 @@ export function LearnerDashboard({
           <div className="relative mb-12 flex flex-col items-center gap-12">
             <div className="pointer-events-none absolute bottom-12 top-12 z-0 w-2 bg-[repeating-linear-gradient(to_bottom,var(--color-outline-variant),var(--color-outline-variant)_10px,transparent_10px,transparent_20px)]" />
             {PATH_NODES.map((node) => (
-              <PathNode key={node.title} {...node} />
+              <PathNode
+                key={node.title}
+                {...node}
+                href={node.state === "active" ? activeLessonHref : undefined}
+              />
             ))}
           </div>
 
@@ -161,36 +174,30 @@ export function LearnerDashboard({
           </section>
 
           <section className="rounded-2xl border-2 border-outline-variant bg-surface-container-high p-5">
-            <div className="mb-3 flex items-center justify-between gap-4">
-              <h3 className="text-sm font-bold text-on-surface">Daily XP Goal</h3>
-              <span className="font-bold text-secondary">
-                {xp} / {goalMax}
-              </span>
-            </div>
-            <div className="h-4 overflow-hidden rounded-full bg-surface-dim">
-              <div
-                className="h-full rounded-full bg-secondary"
-                style={{ width: `${goalProgress}%` }}
-              />
-            </div>
+            <ProgressBar
+              value={xp}
+              max={goalMax}
+              label="Daily XP Goal"
+              detail={`${xp} / ${goalMax}`}
+            />
             <p className="mt-3 text-xs font-medium text-on-surface-variant">
               Keep going to hit today&apos;s study target.
             </p>
           </section>
 
           <div className="grid grid-cols-2 gap-4">
-            <StatCard label="Bible IQ" value={String(bibleIq)} icon="psychology" />
-            <StatCard
+            <StatTile label="Bible IQ" value={String(bibleIq)} icon="psychology" />
+            <StatTile
               label="Mastery"
               value={`${Math.round(masteryPercent)}%`}
               icon="school"
             />
-            <StatCard
+            <StatTile
               label="Lessons"
               value={String(lessonsCompleted)}
               icon="task_alt"
             />
-            <StatCard label="Badges" value={String(achievementCount)} icon="stars" />
+            <StatTile label="Badges" value={String(achievementCount)} icon="stars" />
           </div>
 
           <section className="rounded-2xl border-2 border-outline-variant bg-surface p-5">

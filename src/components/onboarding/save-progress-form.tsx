@@ -166,9 +166,14 @@ export function SaveProgressForm({ xpEarned = 15 }: { xpEarned?: number }) {
 
             <p className="mt-10 px-4 text-center text-xs font-medium text-on-surface-variant">
               By signing up, you agree to our{" "}
-              <span className="font-bold text-primary">Terms of Service</span>{" "}
+              <Link href="/terms" className="font-bold text-primary hover:underline">
+                Terms of Service
+              </Link>{" "}
               and{" "}
-              <span className="font-bold text-primary">Privacy Policy</span>.
+              <Link href="/policy" className="font-bold text-primary hover:underline">
+                Privacy Policy
+              </Link>
+              .
             </p>
           </div>
 
