@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { BrandHeader } from "@/components/ui/brand-header";
 import { OnboardingProgress } from "@/components/ui/onboarding-progress";
 import { OptionCardGrid } from "@/components/ui/option-card-grid";
 import { PrimaryButton } from "@/components/ui/primary-button";
@@ -42,9 +41,8 @@ export function WhyForm({ initialWhy }: { initialWhy?: string }) {
   const [state, action, pending] = useActionState(saveWhy, initial);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <BrandHeader />
-      <main className="mx-auto flex w-full max-w-[1200px] flex-grow flex-col items-center px-margin-mobile pb-32 pt-24">
+    <div className="flex flex-grow flex-col bg-background">
+      <main className="mx-auto flex w-full max-w-[1200px] flex-grow flex-col items-center px-margin-mobile pb-32 pt-16">
         <OnboardingProgress step={1} label="Finding Your Why" />
         <div className="mb-16 text-center">
           <h1 className="mb-3 text-2xl font-bold text-on-background md:text-3xl">

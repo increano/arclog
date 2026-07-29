@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { BrandHeader } from "@/components/ui/brand-header";
 import { OnboardingProgress } from "@/components/ui/onboarding-progress";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import {
@@ -27,9 +26,8 @@ export function TranslationForm({
   );
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <BrandHeader showLanguage={false} />
-      <main className="mx-auto flex w-full max-w-xl flex-grow flex-col items-center px-margin-mobile pb-32 pt-24">
+    <div className="flex flex-grow flex-col bg-background">
+      <main className="mx-auto flex w-full max-w-xl flex-grow flex-col items-center px-margin-mobile pb-32 pt-16">
         <OnboardingProgress step={3} total={3} label="Your Bible" />
         <div className="mb-16 text-center">
           <h1 className="mb-3 text-2xl font-bold md:text-3xl">

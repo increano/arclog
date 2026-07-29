@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { BrandHeader } from "@/components/ui/brand-header";
 import { OnboardingProgress } from "@/components/ui/onboarding-progress";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { Icon } from "@/components/ui/icon";
@@ -110,9 +109,8 @@ export function GuestLessonPlayer({
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <BrandHeader />
-      <main className="mx-auto flex w-full max-w-xl flex-grow flex-col px-margin-mobile pb-32 pt-24">
+    <div className="flex flex-grow flex-col bg-background">
+      <main className="mx-auto flex w-full max-w-xl flex-grow flex-col px-margin-mobile pb-32 pt-16">
         <OnboardingProgress step={3} label="Try a Lesson" />
         <p className="mb-2 text-sm font-bold tracking-wide text-secondary uppercase">
           {lessonTitle} · +{xpReward} XP

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
+import { LanguageMenu } from "@/components/ui/language-menu";
 
 type BrandHeaderProps = {
   showStreak?: boolean;
@@ -39,15 +40,7 @@ export function BrandHeader({
             <span className="text-sm font-bold text-on-surface">1 Day Streak</span>
           </div>
         ) : null}
-        {showLanguage ? (
-          <button
-            type="button"
-            className="rounded-full p-2 text-primary hover:bg-surface-container-low"
-            aria-label="Language"
-          >
-            <Icon name="language" />
-          </button>
-        ) : null}
+        {showLanguage ? <LanguageMenu /> : null}
       </div>
     </header>
   );

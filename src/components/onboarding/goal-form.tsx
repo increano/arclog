@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { BrandHeader } from "@/components/ui/brand-header";
 import { OnboardingProgress } from "@/components/ui/onboarding-progress";
 import { OptionCardGrid } from "@/components/ui/option-card-grid";
 import { PrimaryButton } from "@/components/ui/primary-button";
@@ -40,9 +39,8 @@ export function GoalForm({ initialGoal }: { initialGoal?: number }) {
   const [state, action, pending] = useActionState(saveGoal, initial);
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-background">
-      <BrandHeader />
-      <main className="mx-auto flex w-full max-w-[1200px] flex-grow flex-col items-center px-margin-mobile pb-32 pt-24">
+    <div className="relative flex flex-grow flex-col overflow-x-hidden bg-background">
+      <main className="mx-auto flex w-full max-w-[1200px] flex-grow flex-col items-center px-margin-mobile pb-32 pt-16">
         <OnboardingProgress step={2} label="Setting the Path" />
         <div className="mb-16 text-center">
           <h1 className="mb-3 text-2xl font-bold text-on-background md:text-3xl">

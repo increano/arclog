@@ -11,9 +11,6 @@ import {
 
 const initial: AuthActionState = {};
 
-const CELEBRATE_IMG =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuCEf-Bch9F3ARI6hy8U4pe40XaZNz9qhKtg1OUwPM1cqakJ2SXzhXyNwC09mtOSfi_bxwzFdigXNxo3zrMCvizzJqWSnoHj3cesJu_OedPj30yObpO59x23Tq3F7VBBHnzXbUKCp3DN1kBB2CH39ybg7S48hoHs_F_jRQa8U7Qmz2ZdDrfMLOZnxjs6p1MEOe5-uAg6KpWgvCCYXZNozCGGNtMFXlEcjeQfdzuM9wd7-Sf6uazygADq";
-
 const GOOGLE_ICON =
   "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
 
@@ -29,37 +26,11 @@ export function SaveProgressForm({ xpEarned = 15 }: { xpEarned?: number }) {
   );
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-background text-on-background">
-      <header className="fixed top-0 left-0 z-50 flex h-16 w-full items-center justify-between px-margin-mobile md:px-10">
-        <Link
-          href="/onboarding/lesson"
-          className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-surface-container active:scale-90"
-          aria-label="Back"
-        >
-          <Icon name="close" />
-        </Link>
-        <div className="flex items-center gap-2">
-          <Icon
-            name="local_fire_department"
-            filled
-            className="text-tertiary-fixed-dim"
-          />
-          <span className="text-sm font-bold">1 Day Streak</span>
-        </div>
-      </header>
-
-      <main className="flex min-h-screen w-full max-w-[1200px] flex-col items-center justify-center gap-10 px-margin-mobile pt-24 pb-12 md:flex-row md:gap-16 md:px-10">
+    <div className="flex flex-grow flex-col items-center bg-background text-on-background">
+      <main className="flex w-full max-w-[1200px] flex-grow flex-col items-center justify-center gap-10 px-margin-mobile py-8 md:flex-row md:gap-16 md:px-10">
         <div className="flex flex-1 flex-col items-center justify-center space-y-4 text-center">
-          <div className="relative mb-2 h-64 w-64 md:h-80 md:w-80">
-            <div className="absolute inset-0 animate-pulse rounded-full bg-primary-container opacity-20 blur-3xl" />
-            <div className="animate-float relative z-10 h-full w-full">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={CELEBRATE_IMG}
-                alt="Celebration after completing a lesson"
-                className="h-full w-full object-contain"
-              />
-            </div>
+          <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-secondary-container">
+            <Icon name="check_circle" filled className="text-5xl text-secondary" />
           </div>
           <h2 className="text-2xl font-bold text-primary md:text-3xl">
             Lesson Complete!
