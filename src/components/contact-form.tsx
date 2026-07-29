@@ -83,7 +83,7 @@ export function ContactForm() {
 
       <button
         type="submit"
-        className="btn-primary-tactile flex h-12 w-full items-center justify-center rounded-xl bg-primary text-sm font-bold text-on-primary"
+        className="flex h-12 w-full items-center justify-center rounded-xl bg-primary text-sm font-bold text-on-primary"
       >
         Send Message
       </button>

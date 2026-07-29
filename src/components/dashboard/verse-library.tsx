@@ -162,7 +162,7 @@ export function VerseLibraryView({
         <div className="flex flex-wrap gap-3">
           <Link
             href="/me"
-            className="btn-primary-tactile inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-on-primary"
+            className="inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-on-primary"
           >
             <Icon name="home" />
             Back to path
@@ -213,8 +213,8 @@ function BookGroup({
                 onClick={() => onSelectBook(book)}
                 className={`flex w-full items-center justify-between rounded-xl p-3 text-left transition-colors ${
                   active
-                    ? "border-l-4 border-primary bg-surface-container-highest"
-                    : "hover:bg-surface-container-high"
+                    ? "border-2 border-primary bg-surface-container-highest"
+                    : "border-2 border-transparent hover:bg-surface-container-high"
                 }`}
               >
                 <span className="flex items-center gap-3">

@@ -53,10 +53,10 @@ function PathNode({
   const wrapperClass = offset ?? "";
   const stateClass =
     state === "done"
-      ? "border-b-8 border-on-secondary-fixed-variant bg-secondary text-on-secondary"
+      ? "border-2 border-on-secondary-fixed-variant bg-secondary text-on-secondary"
       : state === "active"
-        ? "border-b-8 border-on-primary-fixed-variant bg-primary text-on-primary ring-8 ring-primary-container/30"
-        : "border-b-8 border-outline-variant bg-surface-dim text-outline opacity-80";
+        ? "border-2 border-on-primary-fixed-variant bg-primary text-on-primary ring-8 ring-primary-container/30"
+        : "border-2 border-outline-variant bg-surface-container-lowest text-outline";
 
   const node = (
     <>
@@ -135,12 +135,13 @@ export function LearnerDashboard({
               />
             ))}
           </div>
+        </div>
+      </main>
 
-          <div className="rounded-2xl border-2 border-outline-variant bg-surface-container-lowest p-6">
-            <div className="mb-4 flex items-center justify-between gap-4">
-              <h2 className="text-xl font-bold text-primary">Daily Reflection</h2>
-              <Icon name="format_quote" className="text-5xl text-secondary/20" />
-            </div>
+      <aside className="w-full lg:w-80 lg:shrink-0">
+        <div className="space-y-4 lg:sticky lg:top-10">
+          <section className="rounded-2xl border-2 border-outline-variant bg-surface-container-lowest p-6">
+            <h2 className="mb-4 text-xl font-bold text-primary">Daily Reflection</h2>
             <p className="mb-3 text-xl leading-9 text-on-surface">
               {latestReference
                 ? `Continue from ${latestReference}. Small, steady steps lead to deep understanding.`
@@ -151,12 +152,8 @@ export function LearnerDashboard({
                 ? `${latestReference} · ${latestTranslationSlug ?? preferredSlug}`
                 : "Psalm 119:105"}
             </p>
-          </div>
-        </div>
-      </main>
+          </section>
 
-      <aside className="w-full lg:w-80 lg:shrink-0">
-        <div className="space-y-4 lg:sticky lg:top-10">
           <section className="rounded-2xl border-2 border-outline-variant bg-surface-container-low p-5">
             <div className="mb-4 flex items-center gap-3">
               <Icon

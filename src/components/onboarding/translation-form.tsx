@@ -44,7 +44,7 @@ export function TranslationForm({
               type="button"
               data-active={slug === t.slug}
               onClick={() => setSlug(t.slug)}
-              className={`option-card rounded-xl border-2 px-4 py-4 text-left ${
+              className={`rounded-xl border-2 px-4 py-4 text-left ${
                 slug === t.slug
                   ? "border-primary bg-surface-container"
                   : "border-outline-variant bg-surface-container-lowest"

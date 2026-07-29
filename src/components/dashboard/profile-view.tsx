@@ -121,7 +121,7 @@ export function ProfileView({
       <div className="mt-6 flex flex-wrap gap-3">
         <Link
           href="/me"
-          className="btn-primary-tactile inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-on-primary"
+          className="inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-on-primary"
         >
           Continue learning
         </Link>

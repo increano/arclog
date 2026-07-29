@@ -58,7 +58,7 @@ export function ConfirmEmailForm({
             <button
               type="submit"
               disabled={pending}
-              className="btn-primary-tactile flex h-16 w-full items-center justify-center gap-2 rounded-xl bg-primary text-lg font-bold text-white disabled:opacity-60"
+              className="flex h-16 w-full items-center justify-center gap-2 rounded-xl bg-primary text-lg font-bold text-white disabled:opacity-60"
             >
               {pending ? "Confirming…" : "Confirm & continue"}
               <Icon name="arrow_forward" />
@@ -67,7 +67,7 @@ export function ConfirmEmailForm({
         ) : (
           <Link
             href="/login"
-            className="btn-primary-tactile flex h-16 w-full items-center justify-center gap-2 rounded-xl bg-primary text-lg font-bold text-white"
+            className="flex h-16 w-full items-center justify-center gap-2 rounded-xl bg-primary text-lg font-bold text-white"
           >
             Go to sign in
           </Link>

@@ -133,7 +133,7 @@ export function GuestLessonPlayer({
                 type="button"
                 onClick={() => setAnswer(opt.label)}
                 data-active={answer === opt.label}
-                className={`option-card rounded-xl border-2 px-4 py-4 text-left font-bold ${
+                className={`rounded-xl border-2 px-4 py-4 text-left font-bold ${
                   answer === opt.label
                     ? "border-primary bg-surface-container"
                     : "border-outline-variant bg-surface-container-lowest"

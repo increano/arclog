@@ -41,7 +41,7 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
           <button
             type="submit"
             disabled={googlePending}
-            className="btn-tactile flex h-14 w-full items-center justify-center gap-3 rounded-xl border-2 border-outline-variant bg-white hover:bg-surface-container-low disabled:opacity-60"
+            className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border-2 border-outline-variant bg-white hover:bg-surface-container-low disabled:opacity-60"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={GOOGLE_ICON} alt="" className="h-6 w-6" />
@@ -98,7 +98,7 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
           <button
             type="submit"
             disabled={signInPending}
-            className="btn-primary-tactile flex h-16 w-full items-center justify-center gap-2 rounded-xl bg-primary text-lg font-bold text-white disabled:opacity-60"
+            className="flex h-16 w-full items-center justify-center gap-2 rounded-xl bg-primary text-lg font-bold text-white disabled:opacity-60"
           >
             {signInPending ? "Signing in…" : "Sign in"}
             <Icon name="arrow_forward" />

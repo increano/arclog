@@ -131,7 +131,7 @@ export function ScriptureCard({
           {translationLabel}
         </span>
       ) : null}
-      <div className={`rounded-2xl border-l-4 bg-surface-container-low p-5 ${border}`}>
+      <div className={`rounded-2xl border-2 bg-surface-container-low p-5 ${border}`}>
         <p className="text-xl italic leading-9 text-on-surface">{`"${text}"`}</p>
       </div>
       {reference ? (

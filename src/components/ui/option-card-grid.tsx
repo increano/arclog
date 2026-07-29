@@ -35,7 +35,11 @@ export function OptionCardGrid({
             type="button"
             data-active={active}
             onClick={() => onChange(opt.id)}
-            className="option-card group flex cursor-pointer items-center gap-6 rounded-xl border-2 border-outline-variant bg-surface-container-lowest p-6 text-left hover:border-primary"
+            className={`group flex cursor-pointer items-center gap-6 rounded-xl border-2 p-6 text-left transition-colors ${
+              active
+                ? "border-primary bg-surface-container"
+                : "border-outline-variant bg-surface-container-lowest hover:border-primary"
+            }`}
           >
             <div
               className={`flex h-16 w-16 items-center justify-center rounded-xl transition-transform group-hover:scale-110 ${

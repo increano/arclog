@@ -35,11 +35,11 @@ function NavItem({
 
   const activeClass = mobile
     ? "bg-secondary-container text-on-secondary-container"
-    : "border-b-4 border-primary bg-primary-container text-on-primary-container";
+    : "border-2 border-primary bg-primary-container text-on-primary-container";
 
   const idleClass = mobile
     ? "text-outline"
-    : "text-on-surface-variant hover:bg-surface-container-high";
+    : "border-2 border-transparent text-on-surface-variant hover:bg-surface-container-high";
 
   return (
     <Link href={href} className={`${baseClass} ${active ? activeClass : idleClass}`}>

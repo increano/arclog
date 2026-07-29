@@ -35,7 +35,7 @@ export default async function WelcomePage() {
       <div className="flex w-full max-w-sm flex-col items-center space-y-4">
         <Link
           href="/onboarding/why"
-          className="btn-primary-tactile group flex h-16 w-full items-center justify-center gap-2 rounded-xl bg-primary text-lg font-bold text-on-primary"
+          className="group flex h-16 w-full items-center justify-center gap-2 rounded-xl bg-primary text-lg font-bold text-on-primary"
         >
           Get Started
           <Icon

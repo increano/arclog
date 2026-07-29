@@ -19,7 +19,7 @@ export function LessonUnavailableCard({
         <p className="mb-6 font-medium text-on-surface-variant">{message}</p>
         <Link
           href="/me/lessons"
-          className="btn-primary-tactile inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 text-sm font-bold text-on-primary"
+          className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 text-sm font-bold text-on-primary"
         >
           Back to lessons
         </Link>

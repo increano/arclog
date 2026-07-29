@@ -12,6 +12,11 @@ import type {
   LessonStepView,
 } from "@/components/onboarding/guest-lesson-player";
 
+/** Initial try + 2 retries, then reveal the answer. */
+const MAX_ATTEMPTS = 3;
+
+type StepOutcome = "idle" | "retry" | "correct" | "revealed";
+
 type Props = {
   lessonId: string;
   lessonTitle: string;
@@ -37,7 +42,9 @@ export function LessonPlayer({
   const [index, setIndex] = useState(0);
   const [answer, setAnswer] = useState("");
   const [picked, setPicked] = useState<string[]>([]);
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [attempts, setAttempts] = useState(0);
+  const [outcome, setOutcome] = useState<StepOutcome>("idle");
+  const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [activeTranslation, setActiveTranslation] = useState(translations[0]);
   const [pending, startTransition] = useTransition();
@@ -47,6 +54,8 @@ export function LessonPlayer({
     .filter((o) => o.step_id === step?.id)
     .sort((a, b) => a.sort_order - b.sort_order);
   const progress = ((index + 1) / Math.max(ordered.length, 1)) * 100;
+  const locked = outcome === "correct" || outcome === "revealed";
+  const retriesLeft = Math.max(0, MAX_ATTEMPTS - attempts);
 
   if (!step) {
     return (
@@ -54,6 +63,14 @@ export function LessonPlayer({
         <p className="font-medium text-on-surface-variant">No lesson steps found.</p>
       </div>
     );
+  }
+
+  function resetStepState() {
+    setAnswer("");
+    setPicked([]);
+    setAttempts(0);
+    setOutcome("idle");
+    setCorrectAnswer(null);
   }
 
   function finish() {
@@ -68,13 +85,11 @@ export function LessonPlayer({
   }
 
   function onContinue() {
-    setFeedback(null);
-    setAnswer("");
-    setPicked([]);
     if (index >= ordered.length - 1) {
       finish();
       return;
     }
+    resetStepState();
     setIndex((i) => i + 1);
   }
 
@@ -83,33 +98,44 @@ export function LessonPlayer({
       onContinue();
       return;
     }
-    const payload =
-      step.step_type === "scramble" && picked.length > 0
-        ? picked.join(" ")
-        : answer;
+    if (locked || pending) return;
+
+    // Always send cleaned text (scramble used to join pick keys like "And-0").
+    const payload = answer.trim();
+    if (!payload) return;
+
     startTransition(async () => {
       const fd = new FormData();
       fd.set("step_id", step.id);
       fd.set("answer", payload);
       const result = await submitStepAnswer({}, fd);
       if (result.error) {
-        setFeedback(result.error);
+        setOutcome("retry");
+        setCorrectAnswer(null);
         return;
       }
+
+      const nextAttempts = attempts + 1;
+      setAttempts(nextAttempts);
+      setCorrectAnswer(result.correctAnswer ?? null);
+
       if (result.isCorrect) {
         setScore((s) => s + 1);
-        setFeedback("Correct!");
-      } else {
-        setFeedback(
-          result.correctAnswer
-            ? `Not quite — answer: ${result.correctAnswer}`
-            : "Not quite. Keep going!"
-        );
+        setOutcome("correct");
+        return;
       }
+
+      if (nextAttempts >= MAX_ATTEMPTS) {
+        setOutcome("revealed");
+        return;
+      }
+
+      setOutcome("retry");
     });
   }
 
   function toggleScrambleWord(word: string, wordIndex: number) {
+    if (locked) return;
     const key = `${word}-${wordIndex}`;
     setPicked((prev) => {
       const next = prev.includes(key)
@@ -118,10 +144,17 @@ export function LessonPlayer({
       setAnswer(next.map((w) => w.replace(/-\d+$/, "")).join(" "));
       return next;
     });
+    if (outcome === "retry") setOutcome("idle");
+  }
+
+  function selectMcq(label: string) {
+    if (locked) return;
+    setAnswer(label);
+    if (outcome === "retry") setOutcome("idle");
   }
 
   return (
-    <div className="relative mx-auto flex w-full max-w-3xl flex-col px-margin-mobile pb-32 pt-4 md:px-10 md:pt-6">
+    <div className="relative mx-auto flex w-full max-w-3xl flex-col px-margin-mobile pb-40 pt-4 md:px-10 md:pt-6">
       <div className="mb-6 flex items-center justify-between gap-3">
         <Link
           href="/me"
@@ -168,7 +201,6 @@ export function LessonPlayer({
 
       {step.step_type === "read" && step.verseText ? (
         <div className="relative mb-8 overflow-hidden rounded-3xl border-2 border-outline-variant bg-surface-container-lowest p-6 md:p-8">
-          <div className="absolute top-0 left-0 h-full w-2 bg-primary/20" />
           <p className="text-center text-xl italic leading-9 text-on-surface">
             {step.verseText}
           </p>
@@ -186,8 +218,9 @@ export function LessonPlayer({
             <button
               key={opt.id}
               type="button"
-              onClick={() => setAnswer(opt.label)}
-              className={`rounded-xl border-2 px-4 py-4 text-left font-bold transition-colors ${
+              disabled={locked}
+              onClick={() => selectMcq(opt.label)}
+              className={`rounded-xl border-2 px-4 py-4 text-left font-bold transition-colors disabled:opacity-70 ${
                 answer === opt.label
                   ? "border-primary bg-surface-container"
                   : "border-outline-variant bg-surface-container-lowest"
@@ -228,7 +261,7 @@ export function LessonPlayer({
                 <button
                   key={key}
                   type="button"
-                  disabled={used}
+                  disabled={used || locked}
                   onClick={() => toggleScrambleWord(word, i)}
                   className={`rounded-xl border-2 px-4 py-3 text-sm font-bold transition-colors ${
                     used
@@ -241,38 +274,64 @@ export function LessonPlayer({
               );
             })}
           </div>
-          <button
-            type="button"
-            className="mx-auto block text-sm font-bold text-primary"
-            onClick={() => {
-              setPicked([]);
-              setAnswer("");
-            }}
-          >
-            Clear
-          </button>
+          {!locked ? (
+            <button
+              type="button"
+              className="mx-auto block text-sm font-bold text-primary"
+              onClick={() => {
+                setPicked([]);
+                setAnswer("");
+                if (outcome === "retry") setOutcome("idle");
+              }}
+            >
+              Clear
+            </button>
+          ) : null}
         </div>
       ) : null}
 
-      {feedback ? (
-        <p
-          className={`mt-6 flex items-center justify-center gap-2 text-sm font-bold ${
-            feedback.startsWith("Correct") ? "text-secondary" : "text-tertiary"
-          }`}
-        >
-          <Icon
-            name={feedback.startsWith("Correct") ? "check_circle" : "info"}
-            filled
-          />
-          {feedback}
-        </p>
-      ) : null}
-
       <footer className="fixed inset-x-0 bottom-0 z-40 border-t-2 border-outline-variant bg-surface">
-        <div className="mx-auto flex w-full max-w-3xl px-margin-mobile py-4 pb-8 md:px-10 md:pb-4">
-          {feedback ? (
+        <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 px-margin-mobile py-4 pb-8 md:px-10 md:pb-4">
+          {outcome === "correct" ? (
+            <div className="flex items-start gap-3 rounded-2xl bg-secondary-container px-4 py-3 text-on-secondary-container">
+              <Icon name="check_circle" filled className="mt-0.5 shrink-0" />
+              <p className="text-sm font-bold">Correct!</p>
+            </div>
+          ) : null}
+
+          {outcome === "retry" ? (
+            <div className="flex items-start gap-3 rounded-2xl bg-tertiary-fixed px-4 py-3 text-on-tertiary-fixed">
+              <Icon name="info" filled className="mt-0.5 shrink-0" />
+              <div>
+                <p className="text-sm font-bold">Not quite</p>
+                <p className="text-sm font-medium opacity-90">
+                  {retriesLeft === 1
+                    ? "1 try left, then we’ll show the answer."
+                    : `${retriesLeft} tries left.`}
+                </p>
+              </div>
+            </div>
+          ) : null}
+
+          {outcome === "revealed" ? (
+            <div className="flex items-start gap-3 rounded-2xl border-2 border-outline-variant bg-surface-container-low px-4 py-3 text-on-surface">
+              <Icon name="lightbulb" filled className="mt-0.5 shrink-0 text-primary" />
+              <div>
+                <p className="text-sm font-bold">Answer</p>
+                <p className="mt-1 text-sm font-medium leading-6">
+                  {correctAnswer ?? "Keep studying this verse and try again later."}
+                </p>
+              </div>
+            </div>
+          ) : null}
+
+          {locked ? (
             <PrimaryButton showArrow disabled={pending} onClick={onContinue}>
-              {index >= ordered.length - 1 ? "Finish" : "Next"}
+              {index >= ordered.length - 1
+                ? pending
+                  ? "Finishing…"
+                  : "Finish"
+                : "Next"}
             </PrimaryButton>
           ) : (
             <PrimaryButton
@@ -284,7 +343,11 @@ export function LessonPlayer({
               }
               onClick={onSubmitAnswer}
             >
-              {step.step_type === "read" ? "Continue" : "Check Answer"}
+              {step.step_type === "read"
+                ? "Continue"
+                : outcome === "retry"
+                  ? "Try again"
+                  : "Check Answer"}
             </PrimaryButton>
           )}
         </div>

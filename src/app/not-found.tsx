@@ -20,7 +20,7 @@ export default function NotFound() {
         </p>
         <Link
           href="/"
-          className="btn-primary-tactile flex h-12 items-center justify-center rounded-xl bg-primary px-8 text-sm font-bold text-on-primary"
+          className="flex h-12 items-center justify-center rounded-xl bg-primary px-8 text-sm font-bold text-on-primary"
         >
           Back to Home
         </Link>
