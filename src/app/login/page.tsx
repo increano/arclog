@@ -11,7 +11,7 @@ export default async function LoginPage({
   const error = params.error?.trim();
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-grow flex-col items-center justify-center px-margin-mobile pb-16">
+    <main className="mx-auto flex w-full max-w-md flex-grow flex-col items-center justify-center px-margin-mobile pb-16 pt-16">
       {error ? (
         <p className="mb-4 max-w-md text-center text-sm font-medium text-error">
           {error}

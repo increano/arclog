@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Quicksand, Playfair_Display } from "next/font/google";
-import { BrandHeader } from "@/components/ui/brand-header";
-import { Footer } from "@/components/ui/footer";
+import { AppShell } from "@/components/app-shell";
 import "./globals.css";
 
 const quicksand = Quicksand({
@@ -40,9 +39,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-background text-on-background font-sans">
-        <BrandHeader />
-        <div className="flex-grow pt-16">{children}</div>
-        <Footer />
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

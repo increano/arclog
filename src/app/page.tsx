@@ -1,13 +1,22 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Icon } from "@/components/ui/icon";
+import {
+  getOnboardingDraft,
+  getOnboardingResumePath,
+} from "@/lib/onboarding/draft";
 import { createClient } from "@/lib/supabase/server";
 
 
 export default async function WelcomePage() {
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
-  if (data.user) redirect("/me");
+  const isAuthed = Boolean(data.user);
+
+  const draft = await getOnboardingDraft();
+  const resumePath = getOnboardingResumePath(draft, { isAuthed });
+  if (resumePath) redirect(resumePath);
+  if (isAuthed) redirect("/me");
 
   return (
     <main className="mx-auto flex w-full max-w-[1200px] flex-grow flex-col items-center justify-center px-margin-mobile pb-12 pt-16">
