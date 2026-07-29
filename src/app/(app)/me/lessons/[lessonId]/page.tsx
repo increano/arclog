@@ -3,6 +3,7 @@ import { requireUserOrRedirect } from "@/lib/supabase/auth";
 import { getLessonWithSteps } from "@/lib/learning/queries";
 import { resolvePassage } from "@/lib/bible/queries";
 import { LessonPlayer } from "@/components/dashboard/lesson-player";
+import { LessonUnavailableCard } from "@/components/dashboard/lesson-unavailable-card";
 
 export default async function LessonPage({
   params,
@@ -13,6 +14,15 @@ export default async function LessonPage({
   const { lessonId } = await params;
   const packed = await getLessonWithSteps(lessonId);
   if (!packed) notFound();
+
+  if (packed.steps.length === 0) {
+    return (
+      <LessonUnavailableCard
+        title="No steps for this lesson"
+        message={`${packed.lesson.title} is in the catalog, but it has no practice steps yet.`}
+      />
+    );
+  }
 
   const steps = await Promise.all(
     packed.steps.map(async (s) => {

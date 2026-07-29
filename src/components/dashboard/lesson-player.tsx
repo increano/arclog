@@ -166,7 +166,7 @@ export function LessonPlayer({
         {step.prompt}
       </h1>
 
-      {step.verseText ? (
+      {step.step_type === "read" && step.verseText ? (
         <div className="relative mb-8 overflow-hidden rounded-3xl border-2 border-outline-variant bg-surface-container-lowest p-6 md:p-8">
           <div className="absolute top-0 left-0 h-full w-2 bg-primary/20" />
           <p className="text-center text-xl italic leading-9 text-on-surface">
@@ -268,15 +268,8 @@ export function LessonPlayer({
         </p>
       ) : null}
 
-      <footer className="fixed inset-x-0 bottom-0 z-40 border-t-2 border-outline-variant bg-surface p-4 pb-8 md:left-64 md:pb-4">
-        <div className="mx-auto flex w-full max-w-2xl gap-3">
-          <button
-            type="button"
-            className="flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-container-highest text-primary"
-            aria-label="Hint"
-          >
-            <Icon name="lightbulb" />
-          </button>
+      <footer className="fixed inset-x-0 bottom-0 z-40 border-t-2 border-outline-variant bg-surface">
+        <div className="mx-auto flex w-full max-w-3xl px-margin-mobile py-4 pb-8 md:px-10 md:pb-4">
           {feedback ? (
             <PrimaryButton showArrow disabled={pending} onClick={onContinue}>
               {index >= ordered.length - 1 ? "Finish" : "Next"}

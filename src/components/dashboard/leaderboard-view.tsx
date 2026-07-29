@@ -92,9 +92,7 @@ export function LeaderboardView({
                   className={`absolute -right-1 -bottom-1 flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${
                     rank === 1
                       ? "bg-tertiary-fixed-dim text-on-tertiary-fixed"
-                      : rank === 2
-                        ? "bg-surface-dim text-on-surface"
-                        : "bg-tertiary-container text-on-tertiary-container"
+                      : "bg-outline-variant text-on-surface"
                   }`}
                 >
                   {rank}
