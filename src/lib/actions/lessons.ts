@@ -174,6 +174,36 @@ export async function completeLesson(
     await supabase.rpc("record_learning_activity", { p_xp: xp });
     await supabase.rpc("evaluate_achievements");
 
+    if (xp > 0) {
+      const nowIso = new Date().toISOString();
+      const { data: activeLeagues } = await supabase
+        .from("leagues")
+        .select("id")
+        .lte("starts_at", nowIso)
+        .gt("ends_at", nowIso);
+      for (const active of activeLeagues ?? []) {
+        await supabase.from("league_members").upsert(
+          {
+            league_id: active.id,
+            user_id: userId,
+            weekly_xp: 0,
+          },
+          { onConflict: "league_id,user_id", ignoreDuplicates: true }
+        );
+        const { data: member } = await supabase
+          .from("league_members")
+          .select("weekly_xp")
+          .eq("league_id", active.id)
+          .eq("user_id", userId)
+          .maybeSingle();
+        await supabase
+          .from("league_members")
+          .update({ weekly_xp: (member?.weekly_xp ?? 0) + xp })
+          .eq("league_id", active.id)
+          .eq("user_id", userId);
+      }
+    }
+
     const { data: nextUnits } = await supabase
       .from("learning_units")
       .select("id")
@@ -186,6 +216,7 @@ export async function completeLesson(
     }
 
     revalidatePath("/me");
+    revalidatePath("/me/leaderboard");
     return { ok: true };
   } catch (err) {
     const message = err instanceof Error ? err.message : undefined;

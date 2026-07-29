@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { ProgressBar, StatTile } from "@/components/dashboard/ui";
+import type { PathNodeView } from "@/lib/learning/queries";
 
 type DashboardData = {
   displayName: string;
@@ -16,26 +17,9 @@ type DashboardData = {
   achievementCount: number;
   latestReference: string | null;
   latestTranslationSlug: string | null;
-  activeLessonHref?: string;
+  pathTitle?: string | null;
+  pathNodes?: PathNodeView[];
 };
-
-const PATH_NODES = [
-  { title: "Creation", icon: "check_circle", state: "done" as const },
-  {
-    title: "The Fall",
-    icon: "check_circle",
-    state: "done" as const,
-    offset: "-translate-x-12",
-  },
-  { title: "John 1", icon: "menu_book", state: "active" as const },
-  {
-    title: "Babel",
-    icon: "lock",
-    state: "locked" as const,
-    offset: "translate-x-16",
-  },
-  { title: "Abraham", icon: "lock", state: "locked" as const },
-];
 
 function PathNode({
   title,
@@ -43,13 +27,8 @@ function PathNode({
   state,
   offset,
   href,
-}: {
-  title: string;
-  icon: string;
-  state: "done" | "active" | "locked";
-  offset?: string;
-  href?: string;
-}) {
+  ctaLabel = "Start",
+}: PathNodeView) {
   const wrapperClass = offset ?? "";
   const stateClass =
     state === "done"
@@ -71,7 +50,7 @@ function PathNode({
       </div>
       {state === "active" ? (
         <div className="mt-4 rounded-full bg-primary px-4 py-1 text-center text-sm font-bold text-on-primary">
-          START: {title.toUpperCase()}
+          {ctaLabel.toUpperCase()}: {title.toUpperCase()}
         </div>
       ) : (
         <div className="mt-3 text-center text-sm font-bold text-on-surface-variant">
@@ -83,7 +62,7 @@ function PathNode({
 
   return (
     <div className={`relative z-10 ${wrapperClass}`}>
-      {href && state === "active" ? (
+      {href && (state === "active" || state === "done") ? (
         <Link href={href} className="block text-center">
           {node}
         </Link>
@@ -108,7 +87,8 @@ export function LearnerDashboard({
   achievementCount,
   latestReference,
   latestTranslationSlug,
-  activeLessonHref = "/me/lessons",
+  pathTitle,
+  pathNodes = [],
 }: DashboardData) {
   const goalMax = 500;
 
@@ -123,18 +103,33 @@ export function LearnerDashboard({
             <p className="font-medium italic text-on-surface-variant">
               Preferred translation: {preferredSlug}
             </p>
+            {pathTitle ? (
+              <p className="mt-2 text-sm font-bold tracking-wide text-primary uppercase">
+                {pathTitle}
+              </p>
+            ) : null}
           </div>
 
-          <div className="relative mb-12 flex flex-col items-center gap-12">
-            <div className="pointer-events-none absolute bottom-12 top-12 z-0 w-2 bg-[repeating-linear-gradient(to_bottom,var(--color-outline-variant),var(--color-outline-variant)_10px,transparent_10px,transparent_20px)]" />
-            {PATH_NODES.map((node) => (
-              <PathNode
-                key={node.title}
-                {...node}
-                href={node.state === "active" ? activeLessonHref : undefined}
-              />
-            ))}
-          </div>
+          {pathNodes.length === 0 ? (
+            <div className="rounded-2xl border-2 border-outline-variant bg-surface-container-lowest p-8 text-center">
+              <p className="font-medium text-on-surface-variant">
+                No lessons on this path yet. Check back soon.
+              </p>
+              <Link
+                href="/me/lessons"
+                className="mt-4 inline-flex text-sm font-bold text-primary"
+              >
+                Browse lessons
+              </Link>
+            </div>
+          ) : (
+            <div className="relative mb-12 flex flex-col items-center gap-12">
+              <div className="pointer-events-none absolute bottom-12 top-12 z-0 w-2 bg-[repeating-linear-gradient(to_bottom,var(--color-outline-variant),var(--color-outline-variant)_10px,transparent_10px,transparent_20px)]" />
+              {pathNodes.map((node) => (
+                <PathNode key={node.id} {...node} />
+              ))}
+            </div>
+          )}
         </div>
       </main>
 

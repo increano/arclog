@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Icon } from "@/components/ui/icon";
 import {
   Chip,
@@ -26,27 +27,19 @@ export type LibraryPassage = {
   translations: Array<{ slug: string; title: string; text: string }>;
 };
 
-const FALLBACK_BOOKS: LibraryBook[] = [
-  { code: "GEN", title: "Genesis", testament: "OT", chapters: 50 },
-  { code: "PSA", title: "Psalms", testament: "OT", chapters: 150 },
-  { code: "PRO", title: "Proverbs", testament: "OT", chapters: 31 },
-  { code: "ISA", title: "Isaiah", testament: "OT", chapters: 66 },
-  { code: "JOHN", title: "John", testament: "NT", chapters: 21 },
-  { code: "ROM", title: "Romans", testament: "NT", chapters: 16 },
-];
-
 export function VerseLibraryView({
-  books = FALLBACK_BOOKS,
+  books,
   initialPassage,
   bookmarks,
 }: {
-  books?: LibraryBook[];
+  books: LibraryBook[];
   initialPassage: LibraryPassage;
   bookmarks: Array<{ id: string; label: string; reference: string }>;
 }) {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [selectedBook, setSelectedBook] = useState(
-    books.find((b) => b.code === initialPassage.bookCode) ?? books[0]
+    () => books.find((b) => b.code === initialPassage.bookCode) ?? books[0]
   );
   const [selectedChapter, setSelectedChapter] = useState(initialPassage.chapter);
   const [expanded, setExpanded] = useState(true);
@@ -62,6 +55,25 @@ export function VerseLibraryView({
   const ot = filtered.filter((b) => b.testament === "OT");
   const nt = filtered.filter((b) => b.testament === "NT");
 
+  function navigate(book: LibraryBook, chapter: number) {
+    setSelectedBook(book);
+    setSelectedChapter(chapter);
+    setExpanded(true);
+    router.push(
+      `/me/library?book=${encodeURIComponent(book.code)}&chapter=${chapter}`
+    );
+  }
+
+  if (!selectedBook) {
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center px-6">
+        <p className="font-medium text-on-surface-variant">
+          No books available for this translation yet.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col lg:flex-row">
       <aside className="w-full border-b-2 border-outline-variant bg-surface-container-lowest p-margin-mobile lg:w-80 lg:border-b-0 lg:border-r-2 lg:p-6">
@@ -74,7 +86,7 @@ export function VerseLibraryView({
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search books or verses..."
+            placeholder="Search books..."
             className="w-full rounded-full border-2 border-outline-variant bg-surface py-3 pr-4 pl-10 text-sm font-medium outline-none focus:border-primary"
           />
         </div>
@@ -86,12 +98,8 @@ export function VerseLibraryView({
             selectedBook={selectedBook}
             expanded={expanded}
             selectedChapter={selectedChapter}
-            onSelectBook={(book) => {
-              setSelectedBook(book);
-              setExpanded(true);
-              setSelectedChapter(1);
-            }}
-            onSelectChapter={setSelectedChapter}
+            onSelectBook={(book) => navigate(book, 1)}
+            onSelectChapter={(chapter) => navigate(selectedBook, chapter)}
           />
           <BookGroup
             label="New Testament"
@@ -99,12 +107,8 @@ export function VerseLibraryView({
             selectedBook={selectedBook}
             expanded={expanded}
             selectedChapter={selectedChapter}
-            onSelectBook={(book) => {
-              setSelectedBook(book);
-              setExpanded(true);
-              setSelectedChapter(1);
-            }}
-            onSelectChapter={setSelectedChapter}
+            onSelectBook={(book) => navigate(book, 1)}
+            onSelectChapter={(chapter) => navigate(selectedBook, chapter)}
           />
         </div>
       </aside>
@@ -147,13 +151,14 @@ export function VerseLibraryView({
           ) : (
             <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
               {bookmarks.slice(0, 6).map((b) => (
-                <div
+                <Link
                   key={b.id}
-                  className="rounded-xl border border-outline-variant bg-surface p-3"
+                  href={`/me/library?ref=${encodeURIComponent(b.reference)}`}
+                  className="rounded-xl border border-outline-variant bg-surface p-3 transition-colors hover:border-primary"
                 >
                   <p className="font-bold text-primary">{b.label}</p>
                   <p className="text-xs text-on-surface-variant">{b.reference}</p>
-                </div>
+                </Link>
               ))}
             </div>
           )}
@@ -231,8 +236,8 @@ function BookGroup({
                 />
               </button>
               {active && expanded ? (
-                <div className="mt-1 grid grid-cols-4 gap-1 rounded-xl bg-surface-container-low p-2">
-                  {Array.from({ length: Math.min(book.chapters, 24) }, (_, i) => i + 1).map(
+                <div className="mt-1 grid max-h-48 grid-cols-4 gap-1 overflow-y-auto rounded-xl bg-surface-container-low p-2">
+                  {Array.from({ length: book.chapters }, (_, i) => i + 1).map(
                     (chapter) => (
                       <button
                         key={chapter}

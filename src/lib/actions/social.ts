@@ -85,6 +85,7 @@ export async function joinLeague(
   if (error) return { error: error.message };
 
   revalidatePath("/me");
+  revalidatePath("/me/leaderboard");
   return { ok: true };
 }
 

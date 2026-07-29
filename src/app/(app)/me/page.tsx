@@ -1,6 +1,7 @@
 import { requireUserOrRedirect } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
 import { DEFAULT_TRANSLATION_SLUG } from "@/lib/supabase/env";
+import { getUserPathProgress } from "@/lib/learning/queries";
 import { LearnerDashboard } from "@/components/dashboard/learner-dashboard";
 
 export default async function MePage() {
@@ -15,35 +16,36 @@ export default async function MePage() {
     { count: noteCount },
     { data: latest },
     { count: achievementCount },
-  ] =
-    await Promise.all([
-      supabase
-        .from("profiles")
-        .select("first_name, display_name, preferred_translation_slug")
-        .eq("id", user.id)
-        .maybeSingle(),
-      supabase
-        .from("user_streaks")
-        .select("current_streak, longest_streak")
-        .eq("user_id", user.id)
-        .maybeSingle(),
-      supabase
-        .from("user_stats")
-        .select("xp, bible_iq, mastery_percent, lessons_completed")
-        .eq("user_id", user.id)
-        .maybeSingle(),
-      supabase.from("bookmarks").select("*", { count: "exact", head: true }).eq("user_id", user.id),
-      supabase.from("notes").select("*", { count: "exact", head: true }).eq("user_id", user.id),
-      supabase
-        .from("latest_reading_progress")
-        .select("reference, book_code, chapter, verse, translation_slug, last_read_at")
-        .eq("user_id", user.id)
-        .maybeSingle(),
-      supabase
-        .from("user_achievements")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id),
-    ]);
+    pathProgress,
+  ] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("first_name, display_name, preferred_translation_slug")
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("user_streaks")
+      .select("current_streak, longest_streak")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("user_stats")
+      .select("xp, bible_iq, mastery_percent, lessons_completed")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+    supabase.from("bookmarks").select("*", { count: "exact", head: true }).eq("user_id", user.id),
+    supabase.from("notes").select("*", { count: "exact", head: true }).eq("user_id", user.id),
+    supabase
+      .from("latest_reading_progress")
+      .select("reference, book_code, chapter, verse, translation_slug, last_read_at")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("user_achievements")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id),
+    getUserPathProgress(user.id, "gospel-of-john"),
+  ]);
 
   const preferredSlug =
     profile?.preferred_translation_slug ?? DEFAULT_TRANSLATION_SLUG;
@@ -64,6 +66,8 @@ export default async function MePage() {
       achievementCount={achievementCount ?? 0}
       latestReference={latest?.reference ?? null}
       latestTranslationSlug={latest?.translation_slug ?? null}
+      pathTitle={pathProgress.path?.title ?? null}
+      pathNodes={pathProgress.nodes}
     />
   );
 }

@@ -160,6 +160,127 @@ export async function getGuestAllowedLesson() {
   return data as Lesson | null;
 }
 
+export type PathNodeView = {
+  id: string;
+  title: string;
+  state: "done" | "active" | "locked";
+  icon: string;
+  href?: string;
+  offset?: string;
+  ctaLabel?: string;
+};
+
+const PATH_OFFSETS = ["", "-translate-x-12", "translate-x-16", "-translate-x-8"] as const;
+
+function isUnitUnlocked(
+  unit: LearningUnit,
+  unlockedUnitIds: Set<string>,
+  lessons: Lesson[],
+  completedLessonIds: Set<string>
+): boolean {
+  if (!unit.unlock_after_unit_id) return true;
+  if (unlockedUnitIds.has(unit.id)) return true;
+  const prereq = lessons.filter((l) => l.unit_id === unit.unlock_after_unit_id);
+  return (
+    prereq.length > 0 && prereq.every((l) => completedLessonIds.has(l.id))
+  );
+}
+
+/** Lesson nodes for the learner path tree, with unlock + progress state. */
+export async function getUserPathProgress(
+  userId: string,
+  pathSlug = "gospel-of-john"
+): Promise<{ path: LearningPath | null; nodes: PathNodeView[] }> {
+  const tree = await getPathTree(pathSlug);
+  if (!tree) return { path: null, nodes: [] };
+
+  const supabase = await createClient();
+  const lessonIds = tree.lessons.map((l) => l.id);
+
+  const [progressRes, unlocksRes] = await Promise.all([
+    lessonIds.length > 0
+      ? supabase
+          .from("user_lesson_progress")
+          .select("lesson_id, status")
+          .eq("user_id", userId)
+          .in("lesson_id", lessonIds)
+      : Promise.resolve({ data: [] as { lesson_id: string; status: string }[], error: null }),
+    supabase
+      .from("user_path_unlocks")
+      .select("unit_id")
+      .eq("user_id", userId),
+  ]);
+
+  if (progressRes.error) throw new Error(progressRes.error.message);
+  if (unlocksRes.error) throw new Error(unlocksRes.error.message);
+
+  const statusByLesson = new Map(
+    (progressRes.data ?? []).map((row) => [row.lesson_id, row.status])
+  );
+  const completedLessonIds = new Set(
+    [...statusByLesson.entries()]
+      .filter(([, status]) => status === "completed")
+      .map(([id]) => id)
+  );
+  const unlockedUnitIds = new Set(
+    (unlocksRes.data ?? []).map((row) => row.unit_id)
+  );
+
+  const unitsById = new Map(tree.units.map((u) => [u.id, u]));
+  const unitOrder = new Map(tree.units.map((u) => [u.id, u.sort_order]));
+
+  const orderedLessons = [...tree.lessons].sort((a, b) => {
+    const ua = unitOrder.get(a.unit_id) ?? 0;
+    const ub = unitOrder.get(b.unit_id) ?? 0;
+    if (ua !== ub) return ua - ub;
+    return a.sort_order - b.sort_order;
+  });
+
+  let foundActive = false;
+  const nodes: PathNodeView[] = orderedLessons.map((lesson, index) => {
+    const unit = unitsById.get(lesson.unit_id);
+    const unlocked = unit
+      ? isUnitUnlocked(unit, unlockedUnitIds, tree.lessons, completedLessonIds)
+      : false;
+    const status = statusByLesson.get(lesson.id);
+    const offset = PATH_OFFSETS[index % PATH_OFFSETS.length] || undefined;
+
+    if (status === "completed") {
+      return {
+        id: lesson.id,
+        title: lesson.title,
+        state: "done" as const,
+        icon: "check_circle",
+        href: `/me/lessons/${lesson.id}`,
+        offset,
+      };
+    }
+
+    if (unlocked && !foundActive) {
+      foundActive = true;
+      return {
+        id: lesson.id,
+        title: lesson.title,
+        state: "active" as const,
+        icon: "menu_book",
+        href: `/me/lessons/${lesson.id}`,
+        offset,
+        ctaLabel: status === "in_progress" ? "Continue" : "Start",
+      };
+    }
+
+    return {
+      id: lesson.id,
+      title: lesson.title,
+      state: "locked" as const,
+      icon: "lock",
+      offset,
+    };
+  });
+
+  return { path: tree.path, nodes };
+}
+
 export async function getUserStreakAndStats(userId: string) {
   const supabase = await createClient();
   const [streak, stats] = await Promise.all([

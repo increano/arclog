@@ -3,6 +3,11 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { DEFAULT_TRANSLATION_SLUG } from "@/lib/supabase/env";
 import { parseReference } from "./parse-reference";
+import {
+  canonicalBookNameFromCode,
+  logicalBookFromToken,
+  testamentForBookCode,
+} from "./book-codes";
 
 export type TranslationRow = {
   id: string;
@@ -17,6 +22,13 @@ export type VerseRow = {
   text: string;
   book_code: string;
   chapter: number;
+};
+
+export type LibraryBookRow = {
+  code: string;
+  title: string;
+  testament: "OT" | "NT";
+  chapters: number;
 };
 
 export async function listTranslations(): Promise<TranslationRow[]> {
@@ -40,6 +52,55 @@ export async function getTranslationBySlug(
     .maybeSingle();
   if (error) throw new Error(error.message);
   return data as TranslationRow | null;
+}
+
+/** Books available for a translation, with chapter counts from live verses. */
+export async function listLibraryBooks(
+  translationSlug: string = DEFAULT_TRANSLATION_SLUG
+): Promise<LibraryBookRow[]> {
+  const translation = await getTranslationBySlug(translationSlug);
+  if (!translation) return [];
+
+  const supabase = await createClient();
+  const [{ data: rpcBooks, error: rpcError }, { data: chapterRows, error: chapterError }] =
+    await Promise.all([
+      supabase.rpc("list_bible_books", { p_translation_id: translation.id }),
+      supabase
+        .from("bible_verse")
+        .select("book_code, chapter")
+        .eq("translation_id", translation.id)
+        .eq("verse", 1),
+    ]);
+  if (rpcError) throw new Error(rpcError.message);
+  if (chapterError) throw new Error(chapterError.message);
+
+  const chaptersByBook = new Map<string, number>();
+  for (const row of chapterRows ?? []) {
+    const code = String(row.book_code);
+    const chapter = Number(row.chapter);
+    chaptersByBook.set(code, Math.max(chaptersByBook.get(code) ?? 0, chapter));
+  }
+
+  const books: LibraryBookRow[] = (rpcBooks ?? []).map(
+    (row: { book_code: string; verse_count?: number }) => {
+      const code = String(row.book_code);
+      return {
+        code,
+        title: canonicalBookNameFromCode(code) ?? code,
+        testament: testamentForBookCode(code),
+        chapters: chaptersByBook.get(code) ?? 1,
+      };
+    }
+  );
+
+  // Keep corpus order from list_bible_books when possible; group OT then NT.
+  books.sort((a, b) => {
+    if (a.testament !== b.testament) return a.testament === "OT" ? -1 : 1;
+    const la = logicalBookFromToken(a.code) ?? a.code;
+    const lb = logicalBookFromToken(b.code) ?? b.code;
+    return la.localeCompare(lb);
+  });
+  return books;
 }
 
 export async function getChapterVerses(
