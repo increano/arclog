@@ -8,6 +8,7 @@ import {
   signUp,
   type AuthActionState,
 } from "@/lib/actions/auth";
+import { restartOnboarding } from "@/lib/actions/onboarding";
 
 const initial: AuthActionState = {};
 
@@ -186,6 +187,14 @@ export function SaveProgressForm({ xpEarned = 15 }: { xpEarned?: number }) {
               Log In
             </Link>
           </p>
+          <form action={restartOnboarding} className="mt-3 text-center">
+            <button
+              type="submit"
+              className="text-sm font-medium text-on-surface-variant hover:text-primary hover:underline"
+            >
+              Start over
+            </button>
+          </form>
         </div>
       </main>
     </div>

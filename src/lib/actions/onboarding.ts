@@ -60,6 +60,12 @@ export async function markGuestLessonComplete(): Promise<ActionResult> {
   redirect("/onboarding/save");
 }
 
+/** Wipe onboarding cookie and return to welcome. */
+export async function restartOnboarding(): Promise<void> {
+  await clearOnboardingDraft();
+  redirect("/");
+}
+
 export async function completeOnboarding(
   _prev: ActionResult,
   formData: FormData

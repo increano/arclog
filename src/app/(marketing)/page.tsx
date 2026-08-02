@@ -2,21 +2,37 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Icon } from "@/components/ui/icon";
 import {
+  clearOnboardingDraft,
   getOnboardingDraft,
   getOnboardingResumePath,
 } from "@/lib/onboarding/draft";
 import { createClient } from "@/lib/supabase/server";
 
-
 export default async function WelcomePage() {
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
-  const isAuthed = Boolean(data.user);
+  const user = data.user;
+
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_completed_at")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (profile?.onboarding_completed_at) {
+      await clearOnboardingDraft();
+      redirect("/me");
+    }
+
+    const draft = await getOnboardingDraft();
+    const resumePath = getOnboardingResumePath(draft, { isAuthed: true });
+    redirect(resumePath ?? "/onboarding/translation");
+  }
 
   const draft = await getOnboardingDraft();
-  const resumePath = getOnboardingResumePath(draft, { isAuthed });
+  const resumePath = getOnboardingResumePath(draft, { isAuthed: false });
   if (resumePath) redirect(resumePath);
-  if (isAuthed) redirect("/me");
 
   return (
     <main className="mx-auto flex w-full max-w-[1200px] flex-grow flex-col items-center justify-center px-margin-mobile pb-12 pt-16">

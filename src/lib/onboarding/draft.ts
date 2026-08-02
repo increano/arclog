@@ -39,7 +39,13 @@ export async function setOnboardingDraft(
 
 export async function clearOnboardingDraft(): Promise<void> {
   const jar = await cookies();
-  jar.delete(ONBOARDING_COOKIE);
+  // Expire explicitly — jar.delete() alone can leave httpOnly cookies in some browsers.
+  jar.set(ONBOARDING_COOKIE, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
 }
 
 /** Next onboarding URL from draft progress, or null if none / finished as guest. */
